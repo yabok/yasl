@@ -485,7 +485,7 @@ SDS library, since you can simply create a new SDS string from scratch
 with the new value instead of copying the value in an existing SDS string.
 The reason is efficiency: `sdsnewlen` will always allocate a new string
 while `sdscpylen` will try to reuse the existing string if there is enough
-room to old the new content specified by the user, and will allocate a new
+room to hold the new content specified by the user, and will allocate a new
 one only if needed.
 
 Quoting strings
