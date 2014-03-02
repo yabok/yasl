@@ -773,7 +773,7 @@ output> 109
 output> 59
 ```
 
-NOTE: SDS Low level API uses cammelCase in order to warn you that you are playing with fire.
+NOTE: SDS Low level API uses camelCase in order to warn you that you are playing with fire.
 
 Manual modifications of SDS strings
 ---
