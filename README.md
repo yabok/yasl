@@ -60,24 +60,21 @@ one:
 
 Disadvantages:
 
-1. Many functions return the new string as value, since sometimes SDS requires to create a new string with more space, so the most SDS API calls look like this:
+1. many functions return the new string as value, since sometimes SDS requires to create a new string with more space, so the most SDS API calls look like this:
 
-```c
-s = sdscat(s,"Some more data");
-```
+   ```c
+   s = sdscat(s,"Some more data");
+   ```
 
-As you can see `s` is used as input for `sdscat` but is also set to the value
-returned by the SDS API call, since we are not sure if the call modified the
-SDS string we passed or allocated a new one. Not remembering to assign back
-the return value of `sdscat` or similar functions to the variable holding
-the SDS string will result in a bug.
+   As you can see `s` is used as input for `sdscat` but is also set to the value
+   returned by the SDS API call, since we are not sure if the call modified the
+   SDS string we passed or allocated a new one. Not remembering to assign back
+   the return value of `sdscat` or similar functions to the variable holding
+   the SDS string will result in a bug.
 
-2. If an SDS string is shared in different places in your program you have to modify all the references when you modify the string. However most of the times when you need to share SDS strings it is much better to encapsulate them into structures with a `reference count` otherwise it is too easy to incur memory leaks.
+2. if an SDS string is shared in different places in your program you have to modify all the references when you modify the string. However most of the times when you need to share SDS strings it is much better to encapsulate them into structures with a `reference count` otherwise it is too easy to incur memory leaks.
 
-
-Advantages:
-
-1. you can pass SDS strings to functions designed for C functions without accessing a struct member or calling a function, like this:
+**Advantage #1**: you can pass SDS strings to functions designed for C functions without accessing a struct member or calling a function, like this:
 
 ```c
 printf("%s\n", sds_string);
@@ -95,7 +92,7 @@ Or:
 printf("%s\n", getStringPointer(string));
 ```
 
-2. accessing individual chars is straightforward. C is a low level language so this is an important operation in many programs. With SDS strings accessing individual chars is very natural:
+**Advantage #2**: accessing individual chars is straightforward. C is a low level language so this is an important operation in many programs. With SDS strings accessing individual chars is very natural:
 
 ```c
 printf("%c %c\n", s[0], s[1]);
