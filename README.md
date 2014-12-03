@@ -317,7 +317,7 @@ it with zero bytes.
 sds s = sdsnew("Hello");
 s = sdsgrowzero(s,6);
 s[5] = '!'; /* We are sure this is safe because of sdsgrowzero() */
-printf("%s\n', s);
+printf("%s\n", s);
 
 output> Hello!
 ```
@@ -547,10 +547,10 @@ existing string the quoted string representation of the input string.
 sds sdscatrepr(sds s, const char *p, size_t len);
 ```
 
-The `scscatrepr` (where `repr` means *representation*) follows the usually
-SDS string function rules accepting a char pointer and a length, so you can
-use it with SDS strings, normal C strings by using strlen() as `len` argument,
-or binary data. The following is an example usage:
+The `scscatrepr` (where `repr` stands for *representation*) follows the usually
+SDS string function rules accepting a char pointer and a length, so you can use
+it with SDS strings, normal C strings by using strlen() as `len` argument, or
+binary data. The following is an example usage:
 
 ```c
 sds s1 = sdsnew("abcd");
