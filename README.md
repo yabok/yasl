@@ -74,33 +74,44 @@ one:
 
 2. if an SDS string is shared in different places in your program you have to modify all the references when you modify the string. However most of the times when you need to share SDS strings it is much better to encapsulate them into structures with a `reference count` otherwise it is too easy to incur memory leaks.
 
-**Advantage #1**: you can pass SDS strings to functions designed for C functions without accessing a struct member or calling a function, like this:
+#### Advantages
 
-```c
-printf("%s\n", sds_string);
-```
+1. Tou can pass SDS strings to functions designed for C functions without
+   accessing a struct member or calling a function, like this:
 
-In most other libraries this will be something like:
+   ```c
+   printf("%s\n", sds_string);
+   ```
 
-```c
-printf("%s\n", string->buf);
-```
+   In most other libraries this will be something like:
 
-Or:
+   ```c
+   printf("%s\n", string->buf);
+   ```
 
-```c
-printf("%s\n", getStringPointer(string));
-```
+   Or:
 
-**Advantage #2**: accessing individual chars is straightforward. C is a low level language so this is an important operation in many programs. With SDS strings accessing individual chars is very natural:
+   ```c
+   printf("%s\n", getStringPointer(string));
+   ```
 
-```c
-printf("%c %c\n", s[0], s[1]);
-```
+2. Accessing individual chars is straightforward. C is a low level language so
+   this is an important operation in many programs. With SDS strings accessing
+   individual chars is very natural:
 
-With other libraries your best chance is to assign `string->buf` (or call the function to get the string pointer) to a `char` pointer and work with this. However since the other libraries may reallocate the buffer implicitly every time you call a function that may modify the string you have to get a reference to the buffer again.
+   ```c
+   printf("%c %c\n", s[0], s[1]);
+   ```
 
-**Advantage #3**: single allocation has better cache locality. Usually when you access a string created by a string library using a structure, you have two different allocations for the structure representing the string, and the actual buffer holding the string. Over the time the buffer is reallocated, and it is likely that it ends in a totally different part of memory compared to the structure itself. Since modern programs' performance is often dominated by cache misses, SDS may perform better in many workloads.
+   With other libraries your best chance is to assign `string->buf` (or call the function to get the string pointer) to a `char` pointer and work with this. However since the other libraries may reallocate the buffer implicitly every time you call a function that may modify the string you have to get a reference to the buffer again.
+
+3. single allocation has better cache locality. Usually when you access a
+   string created by a string library using a structure, you have two different
+   allocations for the structure representing the string, and the actual buffer
+   holding the string. Over the time the buffer is reallocated, and it is
+   likely that it ends in a totally different part of memory compared to the
+   structure itself. Since modern programs' performance is often dominated by
+   cache misses, SDS may perform better in many workloads.
 
 ## SDS basics
 
