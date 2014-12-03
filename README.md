@@ -1,16 +1,16 @@
 # Simple Dynamic Strings
 
 SDS is a string library for C designed to augment the limited libc string
-handling functionalities by adding heap allocated strings that are:
+handling functionalities by adding heap allocated strings which are:
 
 * Simpler to use.
 * Binary safe.
-* Computationally more efficient.
-* But yet... Compatible with normal C string functions.
+* More computationally efficient.
+* Still compatible with normal C string functions.
 
 This is achieved using an alternative design in which instead of using a C
 structure to represent a string, we use a binary prefix that is stored
-before the actual pointer to the string that is returned by SDS to the user.
+before the char buffer visible to the user.
 
     +--------+-------------------------------+-----------+
     | Header | Binary safe C alike string... | Null term |
@@ -19,13 +19,13 @@ before the actual pointer to the string that is returned by SDS to the user.
              `-> Pointer returned to the user.
 
 Because of meta data stored before the actual returned pointer as a prefix,
-and because of every SDS string implicitly adding a null term at the end of
-the string regardless of the actual content of the string, SDS strings work
+and because every SDS string implicitly adds a ``NUL`` term at the end of
+the string regardless of the actual contents, SDS strings work
 well together with C strings and the user is free to use them interchangeably
 with read-only functions that access the string.
 
-SDS was a C string library I developed in the past for my everyday C
-programming needs, later it was moved into Redis where it is used extensively
+SDS was a C string library originally developed for everyday C
+programming needs; later it was moved into Redis where it is used extensively
 and where it was modified in order to be suitable for high performance
 operations. Now it has been extracted from Redis and forked as a stand alone
 project again.
@@ -38,7 +38,7 @@ a penalty for using a higher level string library.
 
 ## Advantages and disadvantages of SDS
 
-Normally dynamic string libraries for C are implemented using a structure
+Normally, dynamic string libraries for C are implemented using a structure
 that defines the string. The structure has a pointer field that is managed
 by the string function, so it looks like this:
 
@@ -427,7 +427,7 @@ indexes inside the string, to obtain the range that will be retained.
 ```c
 sds s = sdsnew("Hello World!");
 sdsrange(s,1,4);
-printf("-%s-\n");
+printf("-%s-\n",s);
 
 output> -ello-
 ```
@@ -438,9 +438,9 @@ string, so that `-1` means the last character, `-2` the penultimate, and so fort
 ```c
 sds s = sdsnew("Hello World!");
 sdsrange(s,6,-1);
-printf("-%s-\n");
+printf("-%s-\n",s);
 sdsrange(s,0,-2);
-printf("-%s-\n");
+printf("-%s-\n",s);
 
 output> -World!-
 output> -World-
