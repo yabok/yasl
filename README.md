@@ -1,4 +1,4 @@
-## Simple Dynamic Strings
+# Simple Dynamic Strings
 
 SDS is a string library for C designed to augment the limited libc string
 handling functionalities by adding heap allocated strings that are:
