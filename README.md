@@ -56,7 +56,7 @@ that lives *before* the address of the char array itself.
 There are advantages and disadvantages with this approach over the traditional
 one:
 
-### Disadvantages
+#### Disadvantages
 
 1. Many functions return the new string as value, since sometimes SDS requires
    to create a new string with more space, so the most SDS API calls look like
