@@ -25,10 +25,11 @@ the string regardless of the actual content of the string, SDS strings work
 well together with C strings and the user is free to use them interchangeably
 with read-only functions that access the string.
 
-SDS was a C string I developed in the past for my everyday C programming needs,
-later it was moved into Redis where it is used extensively and where it was
-modified in order to be suitable for high performance operations. Now it was
-extracted from Redis and forked as a stand alone project.
+SDS was a C string library I developed in the past for my everyday C
+programming needs, later it was moved into Redis where it is used extensively
+and where it was modified in order to be suitable for high performance
+operations. Now it has been extracted from Redis and forked as a stand alone
+project again.
 
 Because of its many years of life inside Redis, SDS provides both higher level
 functions for easy strings manipulation in C, but also a set of low level
@@ -50,12 +51,12 @@ struct yourAverageStringLibrary {
 };
 ```
 
-SDS strings as already mentioned don't follow this schema, and are instead
-a single allocation with a prefix that lives *before* the address actually
-returned for the string.
+SDS strings, as mentioned in the [previous section](#simple-dynamic-strings),
+do not follow this scheme, and are instead a single memory region with a prefix
+that lives *before* the address of the char array itself.
 
 There are advantages and disadvantages with this approach over the traditional
-approach:
+one:
 
 **Disadvantage #1**: many functions return the new string as value, since sometimes SDS requires to create a new string with more space, so the most SDS API calls look like this:
 
