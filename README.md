@@ -1,5 +1,4 @@
-Simple Dynamic Strings
-===
+## Simple Dynamic Strings
 
 SDS is a string library for C designed to augment the limited libc string
 handling functionalities by adding heap allocated strings that are:
@@ -36,8 +35,7 @@ functions for easy strings manipulation in C, but also a set of low level
 functions that make it possible to write high performance code without paying
 a penalty for using a higher level string library.
 
-Advantages and disadvantages of SDS
-===
+## Advantages and disadvantages of SDS
 
 Normally dynamic string libraries for C are implemented using a structure
 that defines the string. The structure has a pointer field that is managed
@@ -58,19 +56,21 @@ that lives *before* the address of the char array itself.
 There are advantages and disadvantages with this approach over the traditional
 one:
 
-Disadvantages:
+### Disadvantages
 
-1. many functions return the new string as value, since sometimes SDS requires to create a new string with more space, so the most SDS API calls look like this:
+1. Many functions return the new string as value, since sometimes SDS requires
+   to create a new string with more space, so the most SDS API calls look like
+   this:
 
    ```c
    s = sdscat(s,"Some more data");
    ```
 
-   As you can see `s` is used as input for `sdscat` but is also set to the value
-   returned by the SDS API call, since we are not sure if the call modified the
-   SDS string we passed or allocated a new one. Not remembering to assign back
-   the return value of `sdscat` or similar functions to the variable holding
-   the SDS string will result in a bug.
+   As you can see `s` is used as input for `sdscat` but is also set to the
+   value returned by the SDS API call, since we are not sure if the call
+   modified the SDS string we passed or allocated a new one. Not remembering to
+   assign back the return value of `sdscat` or similar functions to the
+   variable holding the SDS string will result in a bug.
 
 2. if an SDS string is shared in different places in your program you have to modify all the references when you modify the string. However most of the times when you need to share SDS strings it is much better to encapsulate them into structures with a `reference count` otherwise it is too easy to incur memory leaks.
 
@@ -102,8 +102,7 @@ With other libraries your best chance is to assign `string->buf` (or call the fu
 
 **Advantage #3**: single allocation has better cache locality. Usually when you access a string created by a string library using a structure, you have two different allocations for the structure representing the string, and the actual buffer holding the string. Over the time the buffer is reallocated, and it is likely that it ends in a totally different part of memory compared to the structure itself. Since modern programs' performance is often dominated by cache misses, SDS may perform better in many workloads.
 
-SDS basics
-===
+## SDS basics
 
 The type of SDS strings is just the char pointer `char *`. However SDS defines
 an `sds` type as alias of `char *` in its header file: you should use the
@@ -126,8 +125,7 @@ The above small program already shows a few important things about SDS:
 * SDS strings can be passed to `printf()` like any other C string.
 * SDS strings must be freed with `sdsfree()`, since they are heap allocated.
 
-Creating SDS strings
----
+### Creating SDS strings
 
 ```c
 sds sdsnewlen(const void *init, size_t initlen);
@@ -178,8 +176,7 @@ type. You can use the right `printf` specifier instead of casting.
     output> Hello Hello
     ```
 
-Obtaining the string length
----
+### Obtaining the string length
 
 ```c
 size_t sdslen(const sds s);
@@ -207,8 +204,7 @@ case `s[4]` will be a null term, however printing the string with `printf`
 would result in just `"A"` to be printed since libc will treat the SDS string
 like a normal C string.
 
-Destroying strings
----
+### Destroying strings
 
 ```c
 void sdsfree(sds s);
@@ -226,8 +222,7 @@ if (string) sdsfree(string); /* Not needed. */
 sdsfree(string); /* Same effect but simpler. */
 ```
 
-Concatenating strings
----
+### Concatenating strings
 
 Concatenating strings to other strings is likely the operation you will end
 using the most with a dynamic C string library. SDS provides different
@@ -293,8 +288,7 @@ printf("%s\n', s);
 output> Hello!
 ```
 
-Formatting strings
----
+### Formatting strings
 
 There is a special string concatenation function that accepts a `printf` alike
 format specifier and cats the formatted string to the specified string.
@@ -333,8 +327,7 @@ sds num = sdscatprintf(sdsempty(),"%d\n", some_integer);
 
 However this is slow and we have a special function to make it efficient.
 
-Fast number to string operations
----
+### Fast number to string operations
 
 Creating an SDS string from an integer may be a common operation in certain
 kind of programs, and while you may do this with `sdscatprintf` the performance
@@ -353,8 +346,7 @@ printf("%d\n", (int) sdslen(s));
 output> 5
 ```
 
-Trimming strings and getting ranges
----
+### Trimming strings and getting ranges
 
 String trimming is a common operation where a set of characters are
 removed from the left and the right of the string. Another useful operation
@@ -446,8 +438,7 @@ is binary safe this is not a problem, so the goal of SDS is not just to provide
 a high level string API for the C programmer but also dynamically allocated
 buffers that are easy to manage.
 
-String copying
----
+### String copying
 
 The most dangerous and infamous function of the standard C library is probably
 `strcpy`, so perhaps it is funny how in the context of better designed dynamic
@@ -491,8 +482,7 @@ while `sdscpylen` will try to reuse the existing string if there is enough
 room to hold the new content specified by the user, and will allocate a new
 one only if needed.
 
-Quoting strings
----
+### Quoting strings
 
 In order to provide consistent output to the program user, or for debugging
 purposes, it is often important to turn a string that may contain binary
@@ -545,8 +535,7 @@ These are the rules `sdscatrepr` uses for conversion:
 There is an SDS function that is able to perform the reverse conversion and is
 documented in the *Tokenization* paragraph below.
 
-Tokenization
----
+### Tokenization
 
 Tokenization is the process of splitting a larger string into smaller strings.
 In this specific case, the split is performed specifying another string that
@@ -604,8 +593,7 @@ as usual.
 A valid approach is to set the array elements you reused in some way to
 `NULL`, and use `sdsfreesplitres` to free all the rest.
 
-Command line oriented tokenization
----
+### Command line oriented tokenization
 
 Splitting by a separator is a useful operation, but usually it is not enough
 to perform one of the most common tasks involving some non trivial string
@@ -640,8 +628,7 @@ Basically different tokens need to be separated by one or more spaces, and
 every single token can also be a quoted string in the same format that
 `sdscatrepr` is able to emit.
 
-String joining
----
+### String joining
 
 There are two functions doing the reverse of tokenization by joining strings
 into a single one.
@@ -668,8 +655,7 @@ printf("%s\n", s);
 output> foo|bar|zap
 ```
 
-Error handling
----
+### Error handling
 
 All the SDS functions that return an SDS pointer may also return `NULL` on
 out of memory, this is basically the only check you need to perform.
@@ -678,8 +664,7 @@ However many modern C programs handle out of memory by simply aborting the progr
 so you may want to do this as well by wrapping `malloc` and other related
 memory allocation calls directly.
 
-SDS internals and advanced usage
-===
+## SDS internals and advanced usage
 
 At the very beginning of this documentation it was explained how SDS strings
 are allocated, however the prefix stored before the pointer returned to the
@@ -743,8 +728,7 @@ However there is a hard limit to the allocation it can perform ahead, and is
 defined by `SDS_MAX_PREALLOC`. SDS will never allocate more than 1MB of
 additional space (by default, you can change this default).
 
-Shrinking strings
----
+### Shrinking strings
 
 ```c
 sds sdsRemoveFreeSpace(sds s);
@@ -778,8 +762,7 @@ output> 59
 
 NOTE: SDS Low level API uses camelCase in order to warn you that you are playing with fire.
 
-Manual modifications of SDS strings
----
+### Manual modifications of SDS strings
 
     void sdsupdatelen(sds s);
 
@@ -802,8 +785,7 @@ output> 6
 output> 2
 ```
 
-Sharing SDS strings
----
+### Sharing SDS strings
 
 If you are writing a program in which it is advantageous to share the same
 SDS string across different data structures, it is absolutely advised to
@@ -833,8 +815,7 @@ of the shared string:
 * `incrementStringRefCount` will simply increment `refcount` of 1 in the structure. It will be called every time you add a reference to the string on some new data structure, variable, or whatever.
 * `decrementStringRefCount` is used when you remove a reference. This function is however special since when the `refcount` drops to zero, it automatically frees the SDS string, and the `mySharedString` structure as well.
 
-Interactions with heap checkers
----
+### Interactions with heap checkers
 
 Because SDS returns pointers into the middle of memory chunks allocated with
 `malloc`, heap checkers may have issues, however:
@@ -842,8 +823,7 @@ Because SDS returns pointers into the middle of memory chunks allocated with
 * The popular Valgrind program will detect SDS strings are *possibly lost* memory and never as *definitely lost*, so it is easy to tell if there is a leak or not. I used Valgrind with Redis for years and every real leak was consistently detected as "definitely lost".
 * OSX instrumentation tools don't detect SDS strings as leaks but are able to correctly handle pointers pointing to the middle of memory chunks.
 
-Zero copy append from syscalls
-----
+### Zero copy append from syscalls
 
 At this point you should have all the tools to dig more inside the SDS
 library by reading the source code, however there is an interesting pattern
@@ -864,14 +844,12 @@ sdsIncrLen(s, nread);
 
 `sdsIncrLen` is documented inside the source code of `sds.c`.
 
-Embedding SDS into your project
-===
+## Embedding SDS into your project
 
 This is as simple as copying the `sds.c` and `sds.h` files inside your
 project. The source code is small and every C99 compiler should deal with
 it without issues.
 
-Credits and license
-===
+## Credits and license
 
 SDS was created by Salvatore Sanfilippo and is released under the BSD two clause license. See the LICENSE file in this source distribution for more information.
