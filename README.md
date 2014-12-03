@@ -572,7 +572,7 @@ These are the rules `sdscatrepr` uses for conversion:
 * The function always adds initial and final double quotes characters.
 
 There is an SDS function that is able to perform the reverse conversion and is
-documented in the [Tokenization(#tokenization) section below.
+documented in the [Tokenization](#tokenization) section below.
 
 
 ### Tokenization
