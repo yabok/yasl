@@ -1,9 +1,12 @@
-VPATH = .src/
+CFLAGS = -Weverything -std=c11
+CC = clang
 
+SOURCES = src/test.c src/sds.c
+HEADERS = src/test.h src/sds.c
 all: sds-test
 
-sds-test: sds.c sds.h testhelp.h
-	$(CC) -o sds-test $< -Wall -std=c99 -pedantic -O2 -DSDS_TEST_MAIN
+sds-test: $(SOURCES) $(HEADERS)
+	$(CC) $(CFLAGS) -o $@ $(SOURCES)
 	@echo ">>> Type ./sds-test to run the sds.c unit tests."
 
 clean:
