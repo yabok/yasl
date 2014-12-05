@@ -3,6 +3,7 @@ CC = clang
 
 SOURCES = src/twbctf.c src/sds.c
 HEADERS = src/twbctf.h src/sds.c
+
 all: sds-test
 
 sds-test: $(SOURCES) $(HEADERS)
