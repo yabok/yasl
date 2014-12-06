@@ -33,9 +33,10 @@
 signed
 main (void) {
 	int print_width = 0;
-	for (int i = 0; i < TEST_COUNT; i++) {
-		if (strlen(test_list[i].desc) > print_width) {
-			print_width = strlen(test_list[i].desc);
+	for (size_t i = 0; i < TEST_COUNT; i++) {
+		int length = (int)strlen(test_list[i].desc);
+		if (length > print_width) {
+			print_width = length;
 		}
 	}
 
