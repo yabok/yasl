@@ -6,7 +6,7 @@ HEADERS = src/twbctf.h src/sds.c
 
 all: sds-test
 
-sds-test: $(SOURCES) $(HEADERS)
+sds-test: $(SOURCES) $(HEADERS) src/test.c
 	$(CC) $(CFLAGS) -o $@ $(SOURCES)
 	@echo ">>> Type ./sds-test to run the sds.c unit tests."
 
