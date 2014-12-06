@@ -1,4 +1,4 @@
-CFLAGS = -Weverything -std=c11 -g
+CFLAGS += -Weverything -std=c11 -g
 CC = clang
 
 SOURCES = src/twbctf.c src/sds.c
