@@ -531,7 +531,7 @@ sds sdsfromlonglong(long long value) {
 	char buf[32], *p;
 	unsigned long long v;
 
-	v = (value < 0) ? -value : value;
+	v = (unsigned long long)((value < 0) ? -value : value);
 	p = buf+31; /* point to the last character */
 	do {
 		*p-- = '0'+(v%10);
