@@ -36,23 +36,23 @@
 typedef char *sds;
 
 struct sdshdr {
-    int len;
-    int free;
-    char buf[];
+	int len;
+	int free;
+	char buf[];
 };
 
 static inline struct sdshdr * sdsheader(const sds s) {
-    return s - (sizeof (struct sdshdr));
+	return s - (sizeof (struct sdshdr));
 }
 
 static inline size_t sdslen(const sds s) {
-    struct sdshdr *sh = sdsheader(s);
-    return sh->len;
+	struct sdshdr *sh = sdsheader(s);
+	return sh->len;
 }
 
 static inline size_t sdsavail(const sds s) {
-    struct sdshdr *sh = sdsheader(s);
-    return sh->free;
+	struct sdshdr *sh = sdsheader(s);
+	return sh->free;
 }
 
 sds sdsnewlen(const void *init, size_t initlen);
