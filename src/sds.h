@@ -41,6 +41,10 @@ struct sdshdr {
     char buf[];
 };
 
+static inline struct sdshdr * sdsheader(const sds s) {
+    return s - (sizeof (struct sdshdr));
+}
+
 static inline size_t sdslen(const sds s) {
     struct sdshdr *sh = s - (sizeof (struct sdshdr));
     return sh->len;
