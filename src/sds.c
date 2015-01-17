@@ -56,8 +56,9 @@ sds sdsnewlen(const void *init, size_t initlen) {
 	if (sh == NULL) return NULL;
 	sh->len = initlen;
 	sh->free = 0;
-	if (initlen && init)
+	if (initlen && init) {
 		memcpy(sh->buf, init, initlen);
+	}
 	sh->buf[initlen] = '\0';
 	return (char*)sh->buf;
 }
@@ -132,10 +133,11 @@ sds sdsMakeRoomFor(sds s, size_t addlen) {
 	len = sdslen(s);
 	sh = sdsheader(s);
 	newlen = (len+addlen);
-	if (newlen < SDS_MAX_PREALLOC)
+	if (newlen < SDS_MAX_PREALLOC) {
 		newlen *= 2;
-	else
+	} else {
 		newlen += SDS_MAX_PREALLOC;
+	}
 	newsh = realloc(sh, sizeof(struct sdshdr)+newlen+1);
 	if (newsh == NULL) return NULL;
 
@@ -560,11 +562,12 @@ sds sdscatrepr(sds s, const char *p, size_t len) {
 		case '\a': s = sdscatlen(s,"\\a",2); break;
 		case '\b': s = sdscatlen(s,"\\b",2); break;
 		default:
-			if (isprint(*p))
+			if (isprint(*p)) {
 				s = sdscatprintf(s,"%c",*p);
-			else
+			} else {
 				s = sdscatprintf(s,"\\x%02x",(unsigned char)*p);
 				break;
+			}
 		}
 		p++;
 	}
