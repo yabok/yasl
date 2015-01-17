@@ -46,12 +46,12 @@ static inline struct sdshdr * sdsheader(const sds s) {
 }
 
 static inline size_t sdslen(const sds s) {
-    struct sdshdr *sh = s - (sizeof (struct sdshdr));
+    struct sdshdr *sh = sdsheader(s);
     return sh->len;
 }
 
 static inline size_t sdsavail(const sds s) {
-    struct sdshdr *sh = s - (sizeof (struct sdshdr));
+    struct sdshdr *sh = sdsheader(s);
     return sh->free;
 }
 
