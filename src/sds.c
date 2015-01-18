@@ -472,11 +472,11 @@ int sdscmp(const sds s1, const sds s2) {
  * requires length arguments. sdssplit() is just the
  * same function but for zero-terminated strings.
  */
-sds *sdssplitlen(const char *s, int len, const char *sep, int seplen, int *count) {
-	int elements = 0, slots = 5, start = 0, j;
+sds *sdssplitlen(const char *s, size_t len, const char *sep, size_t seplen, size_t *count) {
+	size_t elements = 0, slots = 5, start = 0, j;
 	sds *tokens;
 
-	if (seplen < 1 || len < 0) { return NULL; }
+	if (seplen < 1) { return NULL; }
 
 	tokens = malloc(sizeof(sds)*slots);
 	if (tokens == NULL) { return NULL; }
