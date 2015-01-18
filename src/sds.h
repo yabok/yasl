@@ -31,13 +31,14 @@
 #define SDS_MAX_PREALLOC (1024*1024)
 
 #include <stdarg.h>
+#include <stddef.h>
 #include <sys/types.h>
 
 typedef char *sds;
 
 struct sdshdr {
-	int len;
-	int free;
+	size_t len;
+	size_t free;
 	char buf[];
 };
 
