@@ -27,7 +27,7 @@ bool sdsIncrLen_content         (void);
 bool sdsIncrLen_len             (void);
 bool sdsIncrLen_free            (void);
 
-struct test test_list [] = {
+static const struct test test_list [] = {
 	{ "create a string and obtain the length", check_string_length        },
 	{ "create a string with specified length", create_with_length         },
 	{ "string concatenation",                  string_concat              },
@@ -216,7 +216,7 @@ sdsIncrLen_free (void) {
 	_sds_cleanup_ sds x = sdsnew("0");
 	x = sdsMakeRoomFor(x, 1);
 	struct sdshdr *sh = (void*) (x-(sizeof(struct sdshdr)));
-	int oldfree = sh->free;
+	size_t oldfree = sh->free;
 	x[1] = '1';
 	sdsIncrLen(x, 1);
 	return (sh->free == oldfree-1);
