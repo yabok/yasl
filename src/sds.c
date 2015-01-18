@@ -106,7 +106,7 @@ void sdsfree(sds s) {
  * remains 6 bytes. */
 void sdsupdatelen(sds s) {
 	struct sdshdr *sh = sdsheader(s);
-	int reallen = strlen(s);
+	size_t reallen = strlen(s);
 	sh->free += (sh->len - reallen);
 	sh->len = reallen;
 }
@@ -421,14 +421,14 @@ void sdsrange(sds s, ptrdiff_t start, ptrdiff_t end) {
 
 /* Apply tolower() to every character of the sds string 's'. */
 void sdstolower(sds s) {
-	int len = sdslen(s), j;
+	size_t len = sdslen(s), j;
 
 	for (j = 0; j < len; j++) s[j] = tolower(s[j]);
 }
 
 /* Apply toupper() to every character of the sds string 's'. */
 void sdstoupper(sds s) {
-	int len = sdslen(s), j;
+	size_t len = sdslen(s), j;
 
 	for (j = 0; j < len; j++) s[j] = toupper(s[j]);
 }
@@ -513,7 +513,7 @@ sds *sdssplitlen(const char *s, size_t len, const char *sep, size_t seplen, size
 
 cleanup:
 	{
-		int i;
+		size_t i;
 		for (i = 0; i < elements; i++) sdsfree(tokens[i]);
 		free(tokens);
 		*count = 0;
