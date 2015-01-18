@@ -27,6 +27,7 @@
 
 #include <assert.h>
 #include <ctype.h>
+#include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -388,7 +389,7 @@ void sdstrim(sds s, const char *cset) {
  * s = sdsnew("Hello World");
  * sdsrange(s,1,-1); => "ello World"
  */
-void sdsrange(sds s, int start, int end) {
+void sdsrange(sds s, ptrdiff_t start, ptrdiff_t end) {
 	struct sdshdr *sh = sdsheader(s);
 	size_t newlen, len = sdslen(s);
 
