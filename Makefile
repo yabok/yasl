@@ -2,7 +2,7 @@ CFLAGS += -Weverything -std=c11 -g
 CC = clang
 
 SOURCES = src/twbctf.c src/sds.c
-HEADERS = src/twbctf.h src/sds.c
+HEADERS = src/twbctf.h src/sds.h
 
 all: sds-test
 
