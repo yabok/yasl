@@ -521,7 +521,7 @@ cleanup:
 }
 
 /* Free the result returned by sdssplitlen(), or do nothing if 'tokens' is NULL. */
-void sdsfreesplitres(sds *tokens, int count) {
+void sdsfreesplitres(sds *tokens, size_t count) {
 	if (!tokens) { return; }
 	while(count--) {
 		sdsfree(tokens[count]);

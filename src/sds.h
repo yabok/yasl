@@ -84,7 +84,7 @@ void sdsupdatelen(sds s);
 void sdsclear(sds s);
 int sdscmp(const sds s1, const sds s2);
 sds *sdssplitlen(const char *s, size_t len, const char *sep, size_t seplen, size_t *count);
-void sdsfreesplitres(sds *tokens, int count);
+void sdsfreesplitres(sds *tokens, size_t count);
 void sdstolower(sds s);
 void sdstoupper(sds s);
 sds sdsfromlonglong(long long value);
