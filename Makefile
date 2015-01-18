@@ -3,7 +3,7 @@ CC = clang
 
 SOURCES = src/twbctf.c src/sds.c
 HEADERS = src/twbctf.h src/sds.h
-MANPAGES = docs/sds.3 docs/sdsnew.3
+MANPAGES = docs/sds.3 docs/sdsnew.3 docs/sdsfree.3
 
 all: sds-test $(MANPAGES)
 
