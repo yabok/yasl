@@ -3,12 +3,27 @@ CC = clang
 
 SOURCES = src/twbctf.c src/sds.c
 HEADERS = src/twbctf.h src/sds.h
+MANPAGES = docs/sds.3
 
-all: sds-test
+all: sds-test $(MANPAGES)
+
 
 sds-test: $(SOURCES) $(HEADERS) src/test.c
+	@echo "==> Building sds-test"
 	$(CC) $(CFLAGS) -o $@ $(SOURCES)
-	@echo ">>> Type ./sds-test to run the sds.c unit tests."
+
+docs/%.3: docs/%.rst
+	@echo "==> Building manpages"
+	sphinx-build -b man -E docs/ docs/
+
+
+test: sds-test
+	./sds-test
+
 
 clean:
 	rm -f sds-test
+	rm docs/*.3
+
+
+.PHONY: all test
