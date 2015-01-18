@@ -43,7 +43,9 @@ struct sdshdr {
 };
 
 static inline struct sdshdr * sdsheader(const sds s) {
-	return s - (sizeof (struct sdshdr));
+	/* The sdshdr pointer has a different alignment than the original char
+	 * pointer, so cast it through a void pointer to silence the warning. */
+	return (void *)(s - (sizeof (struct sdshdr)));
 }
 
 static inline size_t sdslen(const sds s) {
