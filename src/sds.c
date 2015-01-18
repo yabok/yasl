@@ -33,6 +33,9 @@
 
 #include "sds.h"
 
+int is_hex_digit(char c);
+int hex_digit_to_int(char c);
+
 /* Create a new sds string with the content specified by the 'init' pointer
  * and 'initlen'.
  * If NULL is used for 'init' the string is initialized with zero bytes.
