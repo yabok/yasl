@@ -518,8 +518,9 @@ cleanup:
 /* Free the result returned by sdssplitlen(), or do nothing if 'tokens' is NULL. */
 void sdsfreesplitres(sds *tokens, int count) {
 	if (!tokens) return;
-	while(count--)
+	while(count--) {
 		sdsfree(tokens[count]);
+	}
 	free(tokens);
 }
 
@@ -726,8 +727,9 @@ sds *sdssplitargs(const char *line, int *argc) {
 	}
 
 err:
-	while((*argc)--)
+	while((*argc)--) {
 		sdsfree(vector[*argc]);
+	}
 	free(vector);
 	if (current) sdsfree(current);
 	*argc = 0;
