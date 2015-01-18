@@ -292,6 +292,7 @@ sds sdscpy(sds s, const char *t) {
 }
 
 /* Like sdscatpritf() but gets va_list instead of being variadic. */
+#pragma GCC diagnostic ignored "-Wformat-nonliteral"
 sds sdscatvprintf(sds s, const char *fmt, va_list ap) {
 	va_list cpy;
 	char *buf, *t;
@@ -314,6 +315,7 @@ sds sdscatvprintf(sds s, const char *fmt, va_list ap) {
 	free(buf);
 	return t;
 }
+#pragma GCC diagnostic warning "-Wformat-nonliteral"
 
 /* Append to the sds string 's' a string obtained using printf-alike format
  * specifier.
