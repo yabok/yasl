@@ -46,13 +46,11 @@ static inline struct sdshdr * sdsheader(const sds s) {
 }
 
 static inline size_t sdslen(const sds s) {
-	struct sdshdr *sh = sdsheader(s);
-	return sh->len;
+	return sdsheader(s)->len;
 }
 
 static inline size_t sdsavail(const sds s) {
-	struct sdshdr *sh = sdsheader(s);
-	return sh->free;
+	return sdsheader(s)->free;
 }
 
 sds sdsnewlen(const void *init, size_t initlen);
