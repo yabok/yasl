@@ -200,7 +200,7 @@ size_t sdsAllocSize(sds s) {
  * ... check for nread <= 0 and handle it ...
  * sdsIncrLen(s, nread);
  */
-void sdsIncrLen(sds s, int incr) {
+void sdsIncrLen(sds s, size_t incr) {
 	struct sdshdr *sh = sdsheader(s);
 
 	assert(sh->free >= incr);
