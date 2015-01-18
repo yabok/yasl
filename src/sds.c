@@ -421,16 +421,16 @@ void sdsrange(sds s, ptrdiff_t start, ptrdiff_t end) {
 
 /* Apply tolower() to every character of the sds string 's'. */
 void sdstolower(sds s) {
-	size_t len = sdslen(s), j;
-
-	for (j = 0; j < len; j++) s[j] = (char)tolower(s[j]);
+	for (size_t j = 0; j < sdslen(s); j++) {
+		s[j] = (char)tolower(s[j]);
+	}
 }
 
 /* Apply toupper() to every character of the sds string 's'. */
 void sdstoupper(sds s) {
-	size_t len = sdslen(s), j;
-
-	for (j = 0; j < len; j++) s[j] = (char)toupper(s[j]);
+	for (size_t j = 0; j < sdslen(s); j++) {
+		s[j] = (char)toupper(s[j]);
+	}
 }
 
 /* Compare two sds strings s1 and s2 with memcmp().
@@ -473,7 +473,7 @@ int sdscmp(const sds s1, const sds s2) {
  * same function but for zero-terminated strings.
  */
 sds *sdssplitlen(const char *s, size_t len, const char *sep, size_t seplen, size_t *count) {
-	size_t elements = 0, slots = 5, start = 0, j;
+	size_t elements = 0, slots = 5, start = 0;
 	sds *tokens;
 
 	if (seplen < 1) { return NULL; }
@@ -485,7 +485,7 @@ sds *sdssplitlen(const char *s, size_t len, const char *sep, size_t seplen, size
 		*count = 0;
 		return tokens;
 	}
-	for (j = 0; j < (len - (seplen - 1)); j++) {
+	for (size_t j = 0; j < (len - (seplen - 1)); j++) {
 		/* make sure there is room for the next element and the final one */
 		if (slots < elements + 2) {
 			sds *newtokens;
@@ -513,8 +513,7 @@ sds *sdssplitlen(const char *s, size_t len, const char *sep, size_t seplen, size
 
 cleanup:
 	{
-		size_t i;
-		for (i = 0; i < elements; i++) sdsfree(tokens[i]);
+		for (size_t i = 0; i < elements; i++) sdsfree(tokens[i]);
 		free(tokens);
 		*count = 0;
 		return NULL;
@@ -752,10 +751,8 @@ err:
  * The function returns the sds string pointer, that is always the same
  * as the input pointer since no resize is needed. */
 sds sdsmapchars(sds s, const char *from, const char *to, size_t setlen) {
-	size_t j, i, l = sdslen(s);
-
-	for (j = 0; j < l; j++) {
-		for (i = 0; i < setlen; i++) {
+	for (size_t j = 0; j < sdslen(s); j++) {
+		for (size_t i = 0; i < setlen; i++) {
 			if (s[j] == from[i]) {
 				s[j] = to[i];
 				break;
@@ -769,9 +766,8 @@ sds sdsmapchars(sds s, const char *from, const char *to, size_t setlen) {
  * Returns the result as an sds string. */
 sds sdsjoin(char **argv, int argc, char *sep, size_t seplen) {
 	sds join = sdsempty();
-	int j;
 
-	for (j = 0; j < argc; j++) {
+	for (int j = 0; j < argc; j++) {
 		join = sdscat(join, argv[j]);
 		if (j != argc - 1) { join = sdscatlen(join, sep, seplen); }
 	}
@@ -781,9 +777,8 @@ sds sdsjoin(char **argv, int argc, char *sep, size_t seplen) {
 /* Like sdsjoin, but joins an array of SDS strings. */
 sds sdsjoinsds(sds *argv, int argc, const char *sep, size_t seplen) {
 	sds join = sdsempty();
-	int j;
 
-	for (j = 0; j < argc; j++) {
+	for (int j = 0; j < argc; j++) {
 		join = sdscatsds(join, argv[j]);
 		if (j != argc - 1) { join = sdscatlen(join, sep, seplen); }
 	}
