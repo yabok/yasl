@@ -366,7 +366,7 @@ void sdstrim(sds s, const char *cset) {
 	ep = end = s + sdslen(s) - 1;
 	while(sp <= end && strchr(cset, *sp)) { sp++; }
 	while(ep > start && strchr(cset, *ep)) { ep--; }
-	len = (sp > ep) ? 0 : ((ep - sp) + 1);
+	len = (size_t)((sp > ep) ? 0 : ((ep - sp) + 1));
 	if (sh->buf != sp) { memmove(sh->buf, sp, len); }
 	sh->buf[len] = '\0';
 	sh->free = sh->free + (sh->len - len);
@@ -395,20 +395,20 @@ void sdsrange(sds s, ptrdiff_t start, ptrdiff_t end) {
 
 	if (len == 0) { return; }
 	if (start < 0) {
-		start = len + start;
+		start = (ptrdiff_t)len + start;
 		if (start < 0) { start = 0; }
 	}
 	if (end < 0) {
-		end = len + end;
+		end = (ptrdiff_t)len + end;
 		if (end < 0) { end = 0; }
 	}
-	newlen = (start > end) ? 0 : (end - start) + 1;
+	newlen = (size_t)((start > end) ? 0 : (end - start) + 1);
 	if (newlen != 0) {
-		if (start >= (signed)len) {
+		if ((size_t)start >= len) {
 			newlen = 0;
-		} else if (end >= (signed)len) {
-			end = len - 1;
-			newlen = (start > end) ? 0 : (end - start) + 1;
+		} else if ((size_t)end >= len) {
+			end = (ptrdiff_t)len - 1;
+			newlen = (size_t)((start > end) ? 0 : (end - start) + 1);
 		}
 	} else {
 		start = 0;
@@ -423,14 +423,14 @@ void sdsrange(sds s, ptrdiff_t start, ptrdiff_t end) {
 void sdstolower(sds s) {
 	size_t len = sdslen(s), j;
 
-	for (j = 0; j < len; j++) s[j] = tolower(s[j]);
+	for (j = 0; j < len; j++) s[j] = (char)tolower(s[j]);
 }
 
 /* Apply toupper() to every character of the sds string 's'. */
 void sdstoupper(sds s) {
 	size_t len = sdslen(s), j;
 
-	for (j = 0; j < len; j++) s[j] = toupper(s[j]);
+	for (j = 0; j < len; j++) s[j] = (char)toupper(s[j]);
 }
 
 /* Compare two sds strings s1 and s2 with memcmp().
@@ -452,7 +452,7 @@ int sdscmp(const sds s1, const sds s2) {
 	l2 = sdslen(s2);
 	minlen = (l1 < l2) ? l1 : l2;
 	cmp = memcmp(s1, s2, minlen);
-	if (cmp == 0) { return (l1 - l2); }
+	if (cmp == 0) { return (int)(l1 - l2); }
 	return cmp;
 }
 
@@ -497,7 +497,7 @@ sds *sdssplitlen(const char *s, size_t len, const char *sep, size_t seplen, size
 		}
 		/* search the separator */
 		if ((seplen == 1 && *(s + j) == sep[0]) || (memcmp(s + j, sep, seplen) == 0)) {
-			tokens[elements] = sdsnewlen(s + start, j - start);
+			tokens[elements] = sdsnewlen(s + start, (size_t)(j - start));
 			if (tokens[elements] == NULL) { goto cleanup; }
 			elements++;
 			start = j + seplen;
@@ -505,7 +505,7 @@ sds *sdssplitlen(const char *s, size_t len, const char *sep, size_t seplen, size
 		}
 	}
 	/* Add the final element. We are sure there is room in the tokens array. */
-	tokens[elements] = sdsnewlen(s+start,len-start);
+	tokens[elements] = sdsnewlen(s + start, (size_t)(len - start));
 	if (tokens[elements] == NULL) { goto cleanup; }
 	elements++;
 	*count = elements;
@@ -546,7 +546,7 @@ sds sdsfromlonglong(long long value) {
 	} while(v);
 	if (value < 0) { *p-- = '-'; }
 	p++;
-	return sdsnewlen(p,32-(p-buf));
+	return sdsnewlen(p, (size_t)(32 - (p - buf)));
 }
 
 /* Append to the sds string "s" an escaped string representation where
@@ -655,8 +655,8 @@ sds *sdssplitargs(const char *line, int *argc) {
 					{
 						unsigned char byte;
 
-						byte = ((hex_digit_to_int(*(p + 2))*16) +
-						         hex_digit_to_int(*(p + 3)));
+						byte = (unsigned char)((hex_digit_to_int(*(p + 2)) * 16) +
+						                        hex_digit_to_int(*(p + 3)));
 						current = sdscatlen(current, (char*)&byte, 1);
 						p += 3;
 					} else if (*p == '\\' && *(p + 1)) {
@@ -721,7 +721,7 @@ sds *sdssplitargs(const char *line, int *argc) {
 				if (*p) { p++; }
 			}
 			/* add the token to the vector */
-			vector = realloc(vector, ((*argc) + 1) * (sizeof (char *)));
+			vector = realloc(vector, (unsigned long)((*argc) + 1) * (sizeof (char *)));
 			vector[*argc] = current;
 			(*argc)++;
 			current = NULL;
