@@ -57,33 +57,33 @@ static inline void sdsfrees(sds *string) { if (*string) sdsfree(*string); }
 
 bool
 check_string_length(void) {
-	_sds_cleanup_ sds x = sdsnew("foo");
+	_sds_cleanup_ sds x = sdsauto("foo");
 	return (sdslen(x) == 3 && memcmp(x, "foo\0", 4) == 0);
 }
 
 bool
 create_with_length(void) {
-	_sds_cleanup_ sds x = sdsnewlen("foo", 2);
+	_sds_cleanup_ sds x = sdsnew("foo", 2);
 	return (sdslen(x) == 2 && memcmp(x, "fo\0", 3) == 0);
 }
 
 bool
 string_concat(void) {
-	_sds_cleanup_ sds x = sdsnewlen("foo", 2);
+	_sds_cleanup_ sds x = sdsnew("foo", 2);
 	x = sdscat(x, "bar");
 	return (sdslen(x) == 5 && memcmp(x, "fobar\0", 6) == 0);
 }
 
 bool
 sdscpy_against_longer_str(void) {
-	_sds_cleanup_ sds x = sdsnew("foo");
+	_sds_cleanup_ sds x = sdsauto("foo");
 	x = sdscpy(x, "a");
 	return (sdslen(x) == 1 && memcmp(x, "a\0", 2) == 0);
 }
 
 bool
 sdscpy_against_shorter_str(void) {
-	_sds_cleanup_ sds x = sdsnewlen("foo",2);
+	_sds_cleanup_ sds x = sdsnew("foo",2);
 	x = sdscpy(x, "xxxxyyyyzzzz");
 	return (sdslen(x) == 12 && memcmp(x, "xxxxyyyyzzzz\0", 12) == 0);
 }
@@ -96,14 +96,14 @@ sdscatprintf_base_case(void) {
 
 bool
 sdstrim_trims_correctly(void) {
-	_sds_cleanup_ sds x = sdsnew("xxciaoyy");
+	_sds_cleanup_ sds x = sdsauto("xxciaoyy");
 	sdstrim(x, "xy");
 	return (sdslen(x) == 4 && memcmp(x, "ciao\0", 5) == 0);
 }
 
 bool
 sdsrange_one_one (void) {
-	_sds_cleanup_ sds x = sdsnew("ciao");
+	_sds_cleanup_ sds x = sdsauto("ciao");
 	_sds_cleanup_ sds y = sdsdup(x);
 	sdsrange(y, 1, 1);
 	return (sdslen(y) == 1 && memcmp(y, "i\0", 2) == 0);
@@ -111,7 +111,7 @@ sdsrange_one_one (void) {
 
 bool
 sdsrange_one_none (void) {
-	_sds_cleanup_ sds x = sdsnew("ciao");
+	_sds_cleanup_ sds x = sdsauto("ciao");
 	_sds_cleanup_ sds y = sdsdup(x);
 	sdsrange(y, 1, -1);
 	return (sdslen(y) == 3 && memcmp(y, "iao\0", 4) == 0);
@@ -119,7 +119,7 @@ sdsrange_one_none (void) {
 
 bool
 sdsrange_ntwo_none (void) {
-	_sds_cleanup_ sds x = sdsnew("ciao");
+	_sds_cleanup_ sds x = sdsauto("ciao");
 	_sds_cleanup_ sds y = sdsdup(x);
 	sdsrange(y, -2, -1);
 	return (sdslen(y) == 2 && memcmp(y, "ao\0", 3) == 0);
@@ -127,7 +127,7 @@ sdsrange_ntwo_none (void) {
 
 bool
 sdsrange_two_one (void) {
-	_sds_cleanup_ sds x = sdsnew("ciao");
+	_sds_cleanup_ sds x = sdsauto("ciao");
 	_sds_cleanup_ sds y = sdsdup(x);
 	sdsrange(y, 2, 1);
 	return (sdslen(y) == 0 && memcmp(y, "\0", 1) == 0);
@@ -135,7 +135,7 @@ sdsrange_two_one (void) {
 
 bool
 sdsrange_one_hund (void) {
-	_sds_cleanup_ sds x = sdsnew("ciao");
+	_sds_cleanup_ sds x = sdsauto("ciao");
 	_sds_cleanup_ sds y = sdsdup(x);
 	sdsrange(y, 1, 100);
 	return (sdslen(y) == 3 && memcmp(y, "iao\0", 4) == 0);
@@ -143,7 +143,7 @@ sdsrange_one_hund (void) {
 
 bool
 sdsrange_hund_hund (void) {
-	_sds_cleanup_ sds x = sdsnew("ciao");
+	_sds_cleanup_ sds x = sdsauto("ciao");
 	_sds_cleanup_ sds y = sdsdup(x);
 	sdsrange(y, 100, 100);
 	return (sdslen(y) == 0 && memcmp(y, "\0", 1) == 0);
@@ -151,42 +151,42 @@ sdsrange_hund_hund (void) {
 
 bool
 sdscmp_foo_foa (void) {
-	_sds_cleanup_ sds x = sdsnew("foo");
-	_sds_cleanup_ sds y = sdsnew("foa");
+	_sds_cleanup_ sds x = sdsauto("foo");
+	_sds_cleanup_ sds y = sdsauto("foa");
 	return (sdscmp(x, y) > 0);
 }
 
 bool
 sdscmp_aar_bar (void) {
-	_sds_cleanup_ sds x = sdsnew("aar");
-	_sds_cleanup_ sds y = sdsnew("bar");
+	_sds_cleanup_ sds x = sdsauto("aar");
+	_sds_cleanup_ sds y = sdsauto("bar");
 	return (sdscmp(x, y) < 0);
 }
 
 bool
 sdscmp_bar_bar (void) {
-	_sds_cleanup_ sds x = sdsnew("bar");
-	_sds_cleanup_ sds y = sdsnew("bar");
+	_sds_cleanup_ sds x = sdsauto("bar");
+	_sds_cleanup_ sds y = sdsauto("bar");
 	return (sdscmp(x, y) == 0);
 }
 
 bool
 sdscatrepr_test (void) {
-	_sds_cleanup_ sds x = sdsnewlen("\a\n\0foo\r", 7);
+	_sds_cleanup_ sds x = sdsnew("\a\n\0foo\r", 7);
 	_sds_cleanup_ sds y = sdscatrepr(sdsempty(), x, sdslen(x));
 	return (memcmp(y, "\"\\a\\n\\x00foo\\r\"", 15) == 0);
 }
 
 bool
 sdsnew_check_free_len (void) {
-	_sds_cleanup_ sds x = sdsnew("0");
+	_sds_cleanup_ sds x = sdsauto("0");
 	struct sdshdr *sh = (void*) (x-(sizeof(struct sdshdr)));
 	return (sh->len == 1 && sh->free == 0);
 }
 
 bool
 sdsMakeRoomFor_test (void) {
-	_sds_cleanup_ sds x = sdsnew("0");
+	_sds_cleanup_ sds x = sdsauto("0");
 	x = sdsMakeRoomFor(x, 1);
 	struct sdshdr *sh = (void*) (x-(sizeof(struct sdshdr)));
 	return (sh->len == 1 && sh->free > 0);
@@ -194,7 +194,7 @@ sdsMakeRoomFor_test (void) {
 
 bool
 sdsIncrLen_content (void) {
-	_sds_cleanup_ sds x = sdsnew("0");
+	_sds_cleanup_ sds x = sdsauto("0");
 	x = sdsMakeRoomFor(x, 1);
 	x[1] = '1';
 	sdsIncrLen(x, 1);
@@ -203,7 +203,7 @@ sdsIncrLen_content (void) {
 
 bool
 sdsIncrLen_len (void) {
-	_sds_cleanup_ sds x = sdsnew("0");
+	_sds_cleanup_ sds x = sdsauto("0");
 	x = sdsMakeRoomFor(x, 1);
 	struct sdshdr *sh = (void*) (x-(sizeof(struct sdshdr)));
 	x[1] = '1';
@@ -213,7 +213,7 @@ sdsIncrLen_len (void) {
 
 bool
 sdsIncrLen_free (void) {
-	_sds_cleanup_ sds x = sdsnew("0");
+	_sds_cleanup_ sds x = sdsauto("0");
 	x = sdsMakeRoomFor(x, 1);
 	struct sdshdr *sh = (void*) (x-(sizeof(struct sdshdr)));
 	size_t oldfree = sh->free;
