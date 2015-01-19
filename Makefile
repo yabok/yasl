@@ -1,4 +1,5 @@
-CFLAGS += -Weverything -O2 -std=c99 -ggdb
+CFLAGS += -O2 -std=c99 -ggdb -fPIE -pie -fstack-protector-all -Wl,-z,relro -Wl,-z,now
+CFLAGS += -Weverything -Wno-disabled-macro-expansion
 CC = clang
 
 SOURCES = test/twbctf.c src/sds.c
