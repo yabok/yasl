@@ -696,9 +696,6 @@ size_t sdsAllocSize(sds s) {
  * user calls sdsMakeRoomFor(), writes something after the end of
  * the current string, and finally needs to set the new length.
  *
- * Note: it is possible to use a negative increment in order to
- * right-trim the string.
- *
  * Usage example:
  *
  * Using sdsIncrLen() and sdsMakeRoomFor() it is possible to mount the
