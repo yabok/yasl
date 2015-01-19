@@ -42,35 +42,19 @@ struct sdshdr {
 	char buf[];
 };
 
-static inline struct sdshdr * sdsheader(const sds s) {
-	/* The sdshdr pointer has a different alignment than the original char
-	 * pointer, so cast it through a void pointer to silence the warning. */
-	return (void *)(s - (sizeof (struct sdshdr)));
-}
-
-static inline size_t sdslen(const sds s) {
-	return sdsheader(s)->len;
-}
-
-static inline size_t sdsavail(const sds s) {
-	return sdsheader(s)->free;
-}
 
 /**
  * User API function prototypes
  */
 
 /// Initialization
-sds    sdsnewlen(const void *init, size_t initlen);
-sds    sdsnew(const char *init);
+sds    sdsnew(const void *init, size_t initlen);
 sds    sdsdup(const sds s);
 sds    sdsempty(void);
 sds    sdsfromlonglong(long long value);
 
 
 /// Querying
-size_t sdsavail(const sds s);
-size_t sdslen(const sds s);
 int    sdscmp(const sds s1, const sds s2);
 
 
@@ -115,8 +99,33 @@ void   sdsIncrLen(sds s, size_t incr);
 sds    sdsMakeRoomFor(sds s, size_t addlen);
 sds    sdsRemoveFreeSpace(sds s);
 
+
 /// Low-level helper functions
 int    is_hex_digit(char c);
 int    hex_digit_to_int(char c);
+
+
+/**
+ * Inline functions
+ */
+
+static inline struct sdshdr *sdsheader(const sds s) {
+	/* The sdshdr pointer has a different alignment than the original char
+	 * pointer, so cast it through a void pointer to silence the warning. */
+	return (void *)(s - (sizeof (struct sdshdr)));
+}
+
+static inline sds sdsauto(const char *s) {
+	return sdsnew(s, s ? strlen(s) : 0);
+}
+
+static inline size_t sdsavail(const sds s) {
+	return sdsheader(s)->free;
+}
+
+static inline size_t sdslen(const sds s) {
+	return sdsheader(s)->len;
+}
+
 
 #endif

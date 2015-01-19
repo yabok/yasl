@@ -49,7 +49,7 @@
  * You can print the string with printf() as there is an implicit \0 at the
  * end of the string. However the string is binary safe and can contain
  * \0 characters in the middle, as the length is stored in the sds header. */
-sds sdsnewlen(const void *init, size_t initlen) {
+sds sdsnew(const void *init, size_t initlen) {
 	struct sdshdr *sh;
 
 	if (init) {
@@ -58,6 +58,7 @@ sds sdsnewlen(const void *init, size_t initlen) {
 		sh = calloc(sizeof(struct sdshdr) + initlen + 1, 1);
 	}
 	if (sh == NULL) { return NULL; }
+
 	sh->len = initlen;
 	sh->free = 0;
 	if (initlen && init) {
@@ -67,21 +68,15 @@ sds sdsnewlen(const void *init, size_t initlen) {
 	return (char*)sh->buf;
 }
 
-/* Create a new sds string starting from a null termined C string. */
-sds sdsnew(const char *init) {
-	size_t initlen = (init == NULL) ? 0 : strlen(init);
-	return sdsnewlen(init, initlen);
-}
-
 /* Duplicate an sds string. */
 sds sdsdup(const sds s) {
-	return sdsnewlen(s, sdslen(s));
+	return sdsnew(s, sdslen(s));
 }
 
 /* Create an empty (zero length) sds string. Even in this case the string
  * always has an implicit null term. */
 sds sdsempty(void) {
-	return sdsnewlen("", 0);
+	return sdsnew("", 0);
 }
 
 /* Create an sds string from a long long value. It is much faster than:
@@ -100,7 +95,7 @@ sds sdsfromlonglong(long long value) {
 	} while(v);
 	if (value < 0) { *p-- = '-'; }
 	p++;
-	return sdsnewlen(p, (size_t)(32 - (p - buf)));
+	return sdsnew(p, (size_t)(32 - (p - buf)));
 }
 
 
@@ -516,7 +511,7 @@ sds *sdssplitlen(const char *s, size_t len, const char *sep, size_t seplen, size
 		}
 		/* search the separator */
 		if ((seplen == 1 && *(s + j) == sep[0]) || (memcmp(s + j, sep, seplen) == 0)) {
-			tokens[elements] = sdsnewlen(s + start, (size_t)(j - start));
+			tokens[elements] = sdsnew(s + start, (size_t)(j - start));
 			if (tokens[elements] == NULL) { goto cleanup; }
 			elements++;
 			start = j + seplen;
@@ -524,7 +519,7 @@ sds *sdssplitlen(const char *s, size_t len, const char *sep, size_t seplen, size
 		}
 	}
 	/* Add the final element. We are sure there is room in the tokens array. */
-	tokens[elements] = sdsnewlen(s + start, (size_t)(len - start));
+	tokens[elements] = sdsnew(s + start, (size_t)(len - start));
 	if (tokens[elements] == NULL) { goto cleanup; }
 	elements++;
 	*count = elements;
