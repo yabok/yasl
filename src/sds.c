@@ -717,7 +717,6 @@ void sdsIncrLen(sds s, size_t incr) {
 	assert(sh->free >= incr);
 	sh->len += incr;
 	sh->free -= incr;
-	assert(sh->free >= 0);
 	s[sh->len] = '\0';
 }
 
