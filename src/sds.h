@@ -31,18 +31,21 @@
 #define SDS_MAX_PREALLOC (1024*1024)
 
 #include <stdarg.h>
+#include <stddef.h>
 #include <sys/types.h>
 
 typedef char *sds;
 
 struct sdshdr {
-	int len;
-	int free;
+	size_t len;
+	size_t free;
 	char buf[];
 };
 
 static inline struct sdshdr * sdsheader(const sds s) {
-	return s - (sizeof (struct sdshdr));
+	/* The sdshdr pointer has a different alignment than the original char
+	 * pointer, so cast it through a void pointer to silence the warning. */
+	return (void *)(s - (sizeof (struct sdshdr)));
 }
 
 static inline size_t sdslen(const sds s) {
@@ -76,12 +79,12 @@ sds sdscatprintf(sds s, const char *fmt, ...);
 #endif
 
 void sdstrim(sds s, const char *cset);
-void sdsrange(sds s, int start, int end);
+void sdsrange(sds s, ptrdiff_t start, ptrdiff_t end);
 void sdsupdatelen(sds s);
 void sdsclear(sds s);
 int sdscmp(const sds s1, const sds s2);
-sds *sdssplitlen(const char *s, int len, const char *sep, int seplen, int *count);
-void sdsfreesplitres(sds *tokens, int count);
+sds *sdssplitlen(const char *s, size_t len, const char *sep, size_t seplen, size_t *count);
+void sdsfreesplitres(sds *tokens, size_t count);
 void sdstolower(sds s);
 void sdstoupper(sds s);
 sds sdsfromlonglong(long long value);
@@ -93,7 +96,7 @@ sds sdsjoinsds(sds *argv, int argc, const char *sep, size_t seplen);
 
 /* Low level functions exposed to the user API */
 sds sdsMakeRoomFor(sds s, size_t addlen);
-void sdsIncrLen(sds s, int incr);
+void sdsIncrLen(sds s, size_t incr);
 sds sdsRemoveFreeSpace(sds s);
 size_t sdsAllocSize(sds s);
 

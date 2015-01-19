@@ -67,7 +67,7 @@ one:
    API calls look something like this:
 
    ```c
-   s = sdscat(s,"Some more data");
+   s = sdscat(s, "Some more data");
    ```
 
    As you can see `s` is used as input for `sdscat` but is also set to the
@@ -177,20 +177,17 @@ There are many ways to create SDS strings:
     buf[0] = 'A';
     buf[1] = 'B';
     buf[2] = 'C';
-    mystring = sdsnewlen(buf,3);
-    printf("%s of len %d\n", mystring, (int) sdslen(mystring));
+    mystring = sdsnewlen(buf, 3);
+    printf("%s of len %zu\n", mystring, sdslen(mystring));
 
     output> ABC of len 3
     ```
-
-  Note: `sdslen` return value is casted to `int` because it returns a `size_t`
-type. You can use the right `printf` specifier instead of casting.
 
 * The `sdsempty()` function creates an empty zero-length string:
 
     ```c
     sds mystring = sdsempty();
-    printf("%d\n", (int) sdslen(mystring));
+    printf("%zu\n", sdslen(mystring));
 
     output> 0
     ```
@@ -225,8 +222,8 @@ As an example of the binary safeness of SDS strings, we can run the following
 code:
 
 ```c
-sds s = sdsnewlen("A\0\0B",4);
-printf("%d\n", (int) sdslen(s));
+sds s = sdsnewlen("A\0\0B", 4);
+printf("%zu\n", sdslen(s));
 
 output> 4
 ```
@@ -294,7 +291,7 @@ Usage is straightforward:
 ```c
 sds s1 = sdsnew("aaa");
 sds s2 = sdsnew("bbb");
-s1 = sdscatsds(s1,s2);
+s1 = sdscatsds(s1, s2);
 sdsfree(s2);
 printf("%s\n", s1);
 
@@ -315,7 +312,7 @@ it with zero bytes.
 
 ```c
 sds s = sdsnew("Hello");
-s = sdsgrowzero(s,6);
+s = sdsgrowzero(s, 6);
 s[5] = '!'; /* We are sure this is safe because of sdsgrowzero() */
 printf("%s\n", s);
 
@@ -338,7 +335,7 @@ Example:
 sds s;
 int a = 10, b = 20;
 s = sdsnew("The sum is: ");
-s = sdscatprintf(s,"%d+%d = %d",a,b,a+b);
+s = sdscatprintf(s, "%d+%d = %d", a, b, a + b);
 ```
 
 Often you need to create SDS string directly from `printf` format specifiers.
@@ -357,7 +354,7 @@ You can use `sdscatprintf` in order to convert numbers into SDS strings:
 
 ```c
 int some_integer = 100;
-sds num = sdscatprintf(sdsempty(),"%d\n", some_integer);
+sds num = sdscatprintf(sdsempty(), "%d\n", some_integer);
 ```
 
 However this is slow and we have a special function to make it efficient.
@@ -377,7 +374,7 @@ Use it like this:
 
 ```c
 sds s = sdsfromlonglong(10000);
-printf("%d\n", (int) sdslen(s));
+printf("%zu\n", sdslen(s));
 
 output> 5
 ```
@@ -391,7 +388,7 @@ on strings is to just take a range out of a larger string.
 
 ```c
 void sdstrim(sds s, const char *cset);
-void sdsrange(sds s, int start, int end);
+void sdsrange(sds s, ptrdiff_t start, ptrdiff_t end);
 ```
 
 SDS provides both the operations with the `sdstrim` and `sdsrange` functions.
@@ -408,8 +405,8 @@ from an SDS strings:
 
 ```c
 sds s = sdsnew("         my string\n\n  ");
-sdstrim(s," \n");
-printf("-%s-\n",s);
+sdstrim(s, " \n");
+printf("-%s-\n", s);
 
 output> -my string-
 ```
@@ -426,8 +423,8 @@ indexes inside the string, to obtain the range that will be retained.
 
 ```c
 sds s = sdsnew("Hello World!");
-sdsrange(s,1,4);
-printf("-%s-\n",s);
+sdsrange(s, 1, 4);
+printf("-%s-\n", s);
 
 output> -ello-
 ```
@@ -437,10 +434,10 @@ string, so that `-1` means the last character, `-2` the penultimate, and so fort
 
 ```c
 sds s = sdsnew("Hello World!");
-sdsrange(s,6,-1);
-printf("-%s-\n",s);
-sdsrange(s,0,-2);
-printf("-%s-\n",s);
+sdsrange(s, 6, -1);
+printf("-%s-\n", s);
+sdsrange(s, 0, -2);
+printf("-%s-\n", s);
 
 output> -World!-
 output> -World-
@@ -458,7 +455,7 @@ void clusterWriteHandler(..., int fd, void *privdata, ...) {
     if (nwritten <= 0) {
         /* Error handling... */
     }
-    sdsrange(link->sndbuf,nwritten,-1);
+    sdsrange(link->sndbuf, nwritten, -1);
     ... more code here ...
 }
 ```
@@ -498,7 +495,7 @@ The string copy function of SDS is called `sdscpylen` and works like this:
 
 ```c
 s = sdsnew("Hello World!");
-s = sdscpylen(s,"Hello Superman!",15);
+s = sdscpylen(s, "Hello Superman!", 15);
 ```
 
 As you can see the function receives as input the SDS string `s`, but also
@@ -558,7 +555,7 @@ sds s2 = sdsempty();
 s1[1] = 1;
 s1[2] = 2;
 s1[3] = '\n';
-s2 = sdscatrepr(s2,s1,sdslen(s1));
+s2 = sdscatrepr(s2, s1, sdslen(s1));
 printf("%s\n", s2);
 
 output> "a\x01\x02\n"
@@ -597,8 +594,8 @@ strings it is composed of, so SDS provides a function that returns an
 array of SDS strings given a string and a separator.
 
 ```c
-sds *sdssplitlen(const char *s, int len, const char *sep, int seplen, int *count);
-void sdsfreesplitres(sds *tokens, int count);
+sds *sdssplitlen(const char *s, size_t len, const char *sep, size_t seplen, size_t *count);
+void sdsfreesplitres(sds *tokens, size_t count);
 ```
 
 As usual the function can work with either SDS strings or normal C strings.
@@ -611,14 +608,14 @@ The return value is a heap allocated array of SDS strings.
 
 ```c
 sds *tokens;
-int count, j;
+size_t count;
 
 sds line = sdsnew("Hello World!");
-tokens = sdssplitlen(line,sdslen(line)," ",1,&count);
+tokens = sdssplitlen(line, sdslen(line), " ", 1, &count);
 
-for (j = 0; j < count; j++)
+for (size_t j = 0; j < count; j++)
     printf("%s\n", tokens[j]);
-sdsfreesplitres(tokens,count);
+sdsfreesplitres(tokens, count);
 
 output> Hello
 output> World!
@@ -690,8 +687,8 @@ in the array to be SDS strings. Because of this only `sdsjoinsds` is
 able to deal with binary data.
 
 ```c
-char *tokens[3] = {"foo","bar","zap"};
-sds s = sdsjoin(tokens,3,"|",1);
+char *tokens[3] = {"foo", "bar", "zap"};
+sds s = sdsjoin(tokens, 3, "|", 1);
 printf("%s\n", s);
 
 output> foo|bar|zap
@@ -718,8 +715,8 @@ structure implementing it:
 
 ```c
 struct sdshdr {
-    int len;
-    int free;
+    size_t len;
+    size_t free;
     char buf[];
 };
 ```
@@ -727,7 +724,7 @@ struct sdshdr {
 As you can see, the structure may resemble the one of a conventional string
 library, however the `buf` field of the structure is different since it is
 not a pointer but an array without any length declared, so `buf` actually
-points at the first byte just after the `free` integer. So in order to create
+points at the first byte just after the `free` size_t. So in order to create
 an SDS string we just allocate a piece of memory that is as large as the
 `sdshdr` structure plus the length of our string, plus an additional byte
 for the mandatory null term that every SDS string has.
@@ -753,9 +750,9 @@ will create extra free space at the end, like in the following program:
 
 ```c
 s = sdsempty();
-s = sdscat(s,"foo");
-s = sdscat(s,"bar");
-s = sdscat(s,"123");
+s = sdscat(s, "foo");
+s = sdscat(s, "bar");
+s = sdscat(s, "123");
 ```
 
 Since SDS tries to be efficient it can't afford to reallocate the string every
@@ -796,10 +793,10 @@ total allocation for a given string, and is called `sdsAllocSize`.
 
 ```c
 sds s = sdsnew("Ladies and gentlemen");
-s = sdscat(s,"... welcome to the C language.");
-printf("%d\n", (int) sdsAllocSize(s));
+s = sdscat(s, "... welcome to the C language.");
+printf("%zu\n", sdsAllocSize(s));
 s = sdsRemoveFreeSpace(s);
-printf("%d\n", (int) sdsAllocSize(s));
+printf("%zu\n", sdsAllocSize(s));
 
 output> 109
 output> 59
@@ -823,9 +820,9 @@ information for the specified string to the length obtained via `strlen`.
 ```c
 sds s = sdsnew("foobar");
 s[2] = '\0';
-printf("%d\n", sdslen(s));
+printf("%zu\n", sdslen(s));
 sdsupdatelen(s);
-printf("%d\n", sdslen(s));
+printf("%zu\n", sdslen(s));
 
 output> 6
 output> 2
@@ -886,7 +883,7 @@ sds string without copying into an intermediate buffer:
 ```c
 oldlen = sdslen(s);
 s = sdsMakeRoomFor(s, BUFFER_SIZE);
-nread = read(fd, s+oldlen, BUFFER_SIZE);
+nread = read(fd, s + oldlen, BUFFER_SIZE);
 ... check for nread <= 0 and handle it ...
 sdsIncrLen(s, nread);
 ```
@@ -903,4 +900,6 @@ it without issues.
 
 ## Credits and license
 
-SDS was created by Salvatore Sanfilippo and is released under the BSD two clause license. See the LICENSE file in this source distribution for more information.
+SDS was created by Salvatore Sanfilippo and is released under the BSD two
+clause license. See the LICENSE file in this source distribution for more
+information.
