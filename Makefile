@@ -1,4 +1,4 @@
-CFLAGS += -Weverything -std=c11 -g
+CFLAGS += -Weverything -O2 -std=c99 -ggdb
 CC = clang
 
 SOURCES = src/twbctf.c src/sds.c
@@ -18,6 +18,7 @@ docs/%.3: docs/%.rst
 
 
 test: sds-test
+	@echo "==> Running test suite"
 	./sds-test
 
 
