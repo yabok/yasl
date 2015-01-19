@@ -93,7 +93,7 @@ void   sdsfree(sds s);
 void   sdsfreesplitres(sds *tokens, size_t count);
 
 
-/// Low-level functions
+/// Low-level API function prototypes
 size_t sdsAllocSize(sds s);
 void   sdsIncrLen(sds s, size_t incr);
 sds    sdsMakeRoomFor(sds s, size_t addlen);
