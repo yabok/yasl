@@ -11,4 +11,6 @@ struct test {
     test_p func;
 };
 
+uint8_t longest_desc(const struct test *list);
+
 #endif

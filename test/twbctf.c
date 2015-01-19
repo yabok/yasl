@@ -20,6 +20,7 @@
 
 // Libraries //
 #include <stddef.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <string.h>
 
@@ -29,22 +30,41 @@
 // Forward Declarations //
 #define TEST_COUNT ((sizeof test_list)/(sizeof (struct test)))
 
-// Run Suite //
-signed
-main (void) {
-	int print_width = 0;
+uint8_t
+longest_desc(const struct test *list) {
+	uint8_t longest = 0;
 	for (size_t i = 0; i < TEST_COUNT; i++) {
-		int length = (int)strlen(test_list[i].desc);
-		if (length > print_width) {
-			print_width = length;
+		uint8_t len = (uint8_t)strlen(list[i].desc);
+		if (longest < len) {
+			longest = len;
 		}
 	}
+	return longest;
+}
 
-	for (size_t i = 0; i < TEST_COUNT; i++) {
-		printf("Testing %-*s\t\t[ PEND ]\r", print_width, test_list[i].desc);
-		char * result = (test_list[i].func() ? "\x1b[32mPASS" : "\x1b[31mFAIL");
-		printf("Testing %-*s\t\t[ %s \x1b[0m]\n", print_width, test_list[i].desc, result);
-	}
+// Run Suite //
+signed
+main(signed argc, char * argv []) {
 
-	return 0;
+	uint8_t print_width = longest_desc(test_list);
+
+	const size_t tc = TEST_COUNT;
+	bool results [tc];
+	bool shortened = (argc > 1 && *(short * )argv[1] == 0x732d);
+	for ( size_t i = 0; i < tc; i ++ ) {
+		if ( shortened ) {
+			results[i] = test_list[i].func();
+			//printf(results[i] ? "\x1b[32m." : "\x1b[31mF");
+			putchar(results[i] ? '.' : '!');
+		} else {
+			printf("Testing %-*s\t\t[ PEND ]\r", print_width, test_list[i].desc);
+			char * r = test_list[i].func() ? "\x1b[32mPASS" : "\x1b[31mFAIL";
+			printf("Testing %-*s\t\t[ %s \x1b[0m]\n", print_width, test_list[i].desc, r);
+		}
+	} if ( shortened ) {
+		printf("\x1b[0m\n\nFailed Tests:\n");
+		for ( size_t i = 0; i < tc; i ++ ) {
+			!results[i] ? printf(" %s\n", test_list[i].desc) : printf("");
+		}
+	} return 0;
 }
