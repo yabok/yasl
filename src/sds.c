@@ -44,7 +44,7 @@
  * The string is always null-termined (all the sds strings are, always) so
  * even if you create an sds string with:
  *
- * mystring = sdsnewlen("abc", 3");
+ * mystring = sdsnew("abc", 3");
  *
  * You can print the string with printf() as there is an implicit \0 at the
  * end of the string. However the string is binary safe and can contain
@@ -242,7 +242,7 @@ sds sdsmapchars(sds s, const char *from, const char *to, size_t setlen) {
  *
  * Example:
  *
- * s = sdsnew("Hello World");
+ * s = sdsauto("Hello World");
  * sdsrange(s, 1, -1); => "ello World"
  */
 void sdsrange(sds s, ptrdiff_t start, ptrdiff_t end) {
@@ -297,7 +297,7 @@ void sdstoupper(sds s) {
  *
  * Example:
  *
- * s = sdsnew("AA...AA.a.aa.aHelloWorld     :::");
+ * s = sdsauto("AA...AA.a.aa.aHelloWorld     :::");
  * s = sdstrim(s, "A. :");
  * printf("%s\n", s);
  *
@@ -325,7 +325,7 @@ void sdstrim(sds s, const char *cset) {
  * This function is useful when the sds string is hacked manually in some
  * way, like in the following example:
  *
- * s = sdsnew("foobar");
+ * s = sdsauto("foobar");
  * s[2] = '\0';
  * sdsupdatelen(s);
  * printf("%d\n", sdslen(s));
