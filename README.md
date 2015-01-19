@@ -142,7 +142,7 @@ program holds an SDS string and not a C string, however this is not mandatory.
 This is the simplest SDS program you can write that does something:
 
 ```c
-sds mystring = sdsnew("Hello World!");
+sds mystring = sdsauto("Hello World!");
 printf("%s\n", mystring);
 sdsfree(mystring);
 
@@ -159,16 +159,16 @@ The above small program already shows a few important things about SDS:
 ### Creating SDS strings
 
 ```c
-sds sdsnewlen(const void *init, size_t initlen);
-sds sdsnew(const char *init);
+sds sdsnew(const void *init, size_t initlen);
+sds sdsauto(const char *init);
 sds sdsempty(void);
 sds sdsdup(const sds s);
 ```
 
 There are many ways to create SDS strings:
 
-* The `sdsnew` function creates an SDS string from a C null terminated string. We already saw how it works in the above example.
-* The `sdsnewlen` function is similar to `sdsnew` but instead of creating the string assuming that the input string is null terminated, it gets an additional length parameter. This way you can create a string using binary data:
+* The `sdsauto` function creates an SDS string from a C null terminated string. We already saw how it works in the above example.
+* The `sdsnew` function is similar to `sdsauto` but instead of creating the string assuming that the input string is null terminated, it gets an additional length parameter. This way you can create a string using binary data:
 
     ```c
     char buf[3];
@@ -177,7 +177,7 @@ There are many ways to create SDS strings:
     buf[0] = 'A';
     buf[1] = 'B';
     buf[2] = 'C';
-    mystring = sdsnewlen(buf, 3);
+    mystring = sdsnew(buf, 3);
     printf("%s of len %zu\n", mystring, sdslen(mystring));
 
     output> ABC of len 3
@@ -197,7 +197,7 @@ There are many ways to create SDS strings:
     ```c
     sds s1, s2;
 
-    s1 = sdsnew("Hello");
+    s1 = sdsauto("Hello");
     s2 = sdsdup(s1);
     printf("%s %s\n", s1, s2);
 
@@ -222,7 +222,7 @@ As an example of the binary safeness of SDS strings, we can run the following
 code:
 
 ```c
-sds s = sdsnewlen("A\0\0B", 4);
+sds s = sdsnew("A\0\0B", 4);
 printf("%zu\n", sdslen(s));
 
 output> 4
@@ -289,8 +289,8 @@ sds sdscatsds(sds s, const sds t);
 Usage is straightforward:
 
 ```c
-sds s1 = sdsnew("aaa");
-sds s2 = sdsnew("bbb");
+sds s1 = sdsauto("aaa");
+sds s2 = sdsauto("bbb");
 s1 = sdscatsds(s1, s2);
 sdsfree(s2);
 printf("%s\n", s1);
@@ -311,7 +311,7 @@ already `len` bytes, otherwise it will enlarge the string to `len` just padding
 it with zero bytes.
 
 ```c
-sds s = sdsnew("Hello");
+sds s = sdsauto("Hello");
 s = sdsgrowzero(s, 6);
 s[5] = '!'; /* We are sure this is safe because of sdsgrowzero() */
 printf("%s\n", s);
@@ -334,7 +334,7 @@ Example:
 ```c
 sds s;
 int a = 10, b = 20;
-s = sdsnew("The sum is: ");
+s = sdsauto("The sum is: ");
 s = sdscatprintf(s, "%d+%d = %d", a, b, a + b);
 ```
 
@@ -404,7 +404,7 @@ This is an example of string trimming where newlines and spaces are removed
 from an SDS strings:
 
 ```c
-sds s = sdsnew("         my string\n\n  ");
+sds s = sdsauto("         my string\n\n  ");
 sdstrim(s, " \n");
 printf("-%s-\n", s);
 
@@ -422,7 +422,7 @@ two indexes, representing the start and the end as specified by zero-based
 indexes inside the string, to obtain the range that will be retained.
 
 ```c
-sds s = sdsnew("Hello World!");
+sds s = sdsauto("Hello World!");
 sdsrange(s, 1, 4);
 printf("-%s-\n", s);
 
@@ -433,7 +433,7 @@ Indexes can be negative to specify a position starting from the end of the
 string, so that `-1` means the last character, `-2` the penultimate, and so forth:
 
 ```c
-sds s = sdsnew("Hello World!");
+sds s = sdsauto("Hello World!");
 sdsrange(s, 6, -1);
 printf("-%s-\n", s);
 sdsrange(s, 0, -2);
@@ -494,7 +494,7 @@ sds sdscpy(sds s, const char *t);
 The string copy function of SDS is called `sdscpylen` and works like this:
 
 ```c
-s = sdsnew("Hello World!");
+s = sdsauto("Hello World!");
 s = sdscpylen(s, "Hello Superman!", 15);
 ```
 
@@ -512,7 +512,7 @@ terminated string instead.
 You may wonder why it makes sense to have a string copy function in the
 SDS library, since you can simply create a new SDS string from scratch
 with the new value instead of copying the value in an existing SDS string.
-The reason is efficiency: `sdsnewlen` will always allocate a new string
+The reason is efficiency: `sdsnew` will always allocate a new string
 while `sdscpylen` will try to reuse the existing string if there is enough
 room to hold the new content specified by the user, and will allocate a new
 one only if needed.
@@ -550,7 +550,7 @@ it with SDS strings, normal C strings by using strlen() as `len` argument, or
 binary data. The following is an example usage:
 
 ```c
-sds s1 = sdsnew("abcd");
+sds s1 = sdsauto("abcd");
 sds s2 = sdsempty();
 s1[1] = 1;
 s1[2] = 2;
@@ -610,7 +610,7 @@ The return value is a heap allocated array of SDS strings.
 sds *tokens;
 size_t count;
 
-sds line = sdsnew("Hello World!");
+sds line = sdsauto("Hello World!");
 tokens = sdssplitlen(line, sdslen(line), " ", 1, &count);
 
 for (size_t j = 0; j < count; j++)
@@ -792,7 +792,7 @@ There is also a function that can be used in order to get the size of the
 total allocation for a given string, and is called `sdsAllocSize`.
 
 ```c
-sds s = sdsnew("Ladies and gentlemen");
+sds s = sdsauto("Ladies and gentlemen");
 s = sdscat(s, "... welcome to the C language.");
 printf("%zu\n", sdsAllocSize(s));
 s = sdsRemoveFreeSpace(s);
@@ -818,7 +818,7 @@ The function `sdsupdatelen` does just that, updating the internal length
 information for the specified string to the length obtained via `strlen`.
 
 ```c
-sds s = sdsnew("foobar");
+sds s = sdsauto("foobar");
 s[2] = '\0';
 printf("%zu\n", sdslen(s));
 sdsupdatelen(s);
