@@ -1,7 +1,7 @@
 #include <stdbool.h>
 #include <string.h>
+#include <sds.h>
 
-#include "sds.h"
 #include "twbctf.h"
 
 bool check_string_length        (void);
