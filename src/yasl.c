@@ -58,7 +58,7 @@ yastr yaslnew(const void *init, size_t initlen) {
 	} else {
 		sh = calloc(sizeof(struct yastrhdr) + initlen + 1, 1);
 	}
-	if (sh == NULL) { return NULL; }
+	if (!sh) { return NULL; }
 
 	sh->len = initlen;
 	sh->free = 0;
@@ -150,7 +150,7 @@ yastr yaslgrowzero(yastr s, size_t len) {
 
 	if (len <= curlen) { return s; }
 	s = yaslMakeRoomFor(s, len - curlen);
-	if (s == NULL) { return NULL; }
+	if (!s) { return NULL; }
 
 	/* Make sure added region doesn't contain garbage */
 	sh = yaslheader(s);
@@ -169,7 +169,7 @@ yastr yaslcpylen(yastr s, const char *t, size_t len) {
 
 	if (totlen < len) {
 		s = yaslMakeRoomFor(s, len - sh->len);
-		if (s == NULL) { return NULL; }
+		if (!s) { return NULL; }
 		sh = yaslheader(s);
 		totlen = sh->free + sh->len;
 	}
@@ -375,7 +375,7 @@ yastr *yaslsplitargs(const char *line, int *argc) {
 			int insq=0; /* set to 1 if we are in 'single quotes' */
 			int done=0;
 
-			if (current == NULL) { current = yaslempty(); }
+			if (!current) { current = yaslempty(); }
 			while(!done) {
 				if (inq) {
 					if (*p == '\\' && *(p + 1) == 'x' &&
@@ -456,7 +456,7 @@ yastr *yaslsplitargs(const char *line, int *argc) {
 			current = NULL;
 		} else {
 			/* Even on empty input string return something not NULL. */
-			if (vector == NULL) { vector = malloc(sizeof(void*)); }
+			if (!vector) { vector = malloc(sizeof(void*)); }
 			return vector;
 		}
 	}
@@ -494,7 +494,7 @@ yastr *yaslsplitlen(const char *s, size_t len, const char *sep, size_t seplen, s
 	if (seplen < 1) { return NULL; }
 
 	tokens = malloc(sizeof(yastr)*slots);
-	if (tokens == NULL) { return NULL; }
+	if (!tokens) { return NULL; }
 
 	if (len == 0) {
 		*count = 0;
@@ -507,13 +507,13 @@ yastr *yaslsplitlen(const char *s, size_t len, const char *sep, size_t seplen, s
 
 			slots *= 2;
 			newtokens = realloc(tokens, sizeof(yastr) * slots);
-			if (newtokens == NULL) { goto cleanup; }
+			if (!newtokens) { goto cleanup; }
 			tokens = newtokens;
 		}
 		/* search the separator */
 		if ((seplen == 1 && *(s + j) == sep[0]) || (memcmp(s + j, sep, seplen) == 0)) {
 			tokens[elements] = yaslnew(s + start, (size_t)(j - start));
-			if (tokens[elements] == NULL) { goto cleanup; }
+			if (!tokens[elements]) { goto cleanup; }
 			elements++;
 			start = j + seplen;
 			j = j + seplen - 1; /* skip the separator */
@@ -521,7 +521,7 @@ yastr *yaslsplitlen(const char *s, size_t len, const char *sep, size_t seplen, s
 	}
 	/* Add the final element. We are sure there is room in the tokens array. */
 	tokens[elements] = yaslnew(s + start, (size_t)(len - start));
-	if (tokens[elements] == NULL) { goto cleanup; }
+	if (!tokens[elements]) { goto cleanup; }
 	elements++;
 	*count = elements;
 	return tokens;
@@ -565,7 +565,7 @@ yastr yaslcatlen(yastr s, const void *t, size_t len) {
 	size_t curlen = yasllen(s);
 
 	s = yaslMakeRoomFor(s, len);
-	if (s == NULL) { return NULL; }
+	if (!s) { return NULL; }
 	sh = yaslheader(s);
 	memcpy(s + curlen, t, len);
 	sh->len = curlen + len;
@@ -615,7 +615,7 @@ yastr yaslcatvprintf(yastr s, const char *fmt, va_list ap) {
 
 	while(1) {
 		buf = malloc(buflen);
-		if (buf == NULL) { return NULL; }
+		if (!buf) { return NULL; }
 		buf[buflen - 2] = '\0';
 		va_copy(cpy, ap);
 		vsnprintf(buf, buflen, fmt, cpy);
@@ -662,7 +662,7 @@ yastr yaslcatprintf(yastr s, const char *fmt, ...) {
 
 /* Free a yasl string. No operation is performed if 's' is NULL. */
 void yaslfree(yastr s) {
-	if (s == NULL) { return; }
+	if (!s) { return; }
 	free(yaslheader(s));
 }
 
@@ -741,7 +741,7 @@ yastr yaslMakeRoomFor(yastr s, size_t addlen) {
 		newlen += YASL_MAX_PREALLOC;
 	}
 	newsh = realloc(sh, sizeof(struct yastrhdr) + newlen + 1);
-	if (newsh == NULL) { return NULL; }
+	if (!newsh) { return NULL; }
 
 	newsh->free = newlen - len;
 	return newsh->buf;
