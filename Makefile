@@ -4,7 +4,7 @@ CC = clang
 
 SOURCES = test/twbctf.c src/yasl.c
 HEADERS = test/twbctf.h src/yasl.h
-MANPAGES = docs/sds.3 docs/sdsnew.3 docs/sdsfree.3
+MANPAGES = docs/yasl.3 docs/yaslnew.3 docs/yaslfree.3
 
 all: yasl-test $(MANPAGES)
 
