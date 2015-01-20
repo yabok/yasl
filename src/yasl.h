@@ -36,7 +36,7 @@
 
 typedef char *sds;
 
-struct sdshdr {
+struct yastrhdr {
 	size_t len;
 	size_t free;
 	char buf[];
@@ -109,10 +109,10 @@ int    hex_digit_to_int(char c);
  * Inline functions
  */
 
-static inline struct sdshdr *yaslheader(const sds s) {
-	/* The sdshdr pointer has a different alignment than the original char
+static inline struct yastrhdr *yaslheader(const sds s) {
+	/* The yastrhdr pointer has a different alignment than the original char
 	 * pointer, so cast it through a void pointer to silence the warning. */
-	return (void *)(s - (sizeof (struct sdshdr)));
+	return (void *)(s - (sizeof (struct yastrhdr)));
 }
 
 static inline sds yaslauto(const char *s) {
