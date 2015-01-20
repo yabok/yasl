@@ -49,7 +49,7 @@
  * You can print the string with printf() as there is an implicit \0 at the
  * end of the string. However the string is binary safe and can contain
  * \0 characters in the middle, as the length is stored in the sds header. */
-sds yaslnew(const void *init, size_t initlen) {
+yastr yaslnew(const void *init, size_t initlen) {
 	struct yastrhdr *sh;
 
 	if (init) {
@@ -69,13 +69,13 @@ sds yaslnew(const void *init, size_t initlen) {
 }
 
 /* Duplicate an sds string. */
-sds yasldup(const sds s) {
+yastr yasldup(const yastr s) {
 	return yaslnew(s, yasllen(s));
 }
 
 /* Create an empty (zero length) sds string. Even in this case the string
  * always has an implicit null term. */
-sds yaslempty(void) {
+yastr yaslempty(void) {
 	return yaslnew("", 0);
 }
 
@@ -83,7 +83,7 @@ sds yaslempty(void) {
  *
  * yaslcatprintf(yaslempty(), "%lld\n", value);
  */
-sds yaslfromlonglong(long long value) {
+yastr yaslfromlonglong(long long value) {
 	char buf[32], *p;
 	unsigned long long v;
 
@@ -112,7 +112,7 @@ sds yaslfromlonglong(long long value) {
  * If two strings share exactly the same prefix, but one of the two has
  * additional characters, the longer string is considered to be greater than
  * the smaller one. */
-int yaslcmp(const sds s1, const sds s2) {
+int yaslcmp(const yastr s1, const yastr s2) {
 	size_t l1, l2, minlen;
 	int cmp;
 
@@ -131,7 +131,7 @@ int yaslcmp(const sds s1, const sds s2) {
  * However all the existing buffer is not discarded but set as free space
  * so that next append operations will not require allocations up to the
  * number of bytes previously available. */
-void yaslclear(sds s) {
+void yaslclear(yastr s) {
 	struct yastrhdr *sh = yaslheader(s);
 	sh->free += sh->len;
 	sh->len = 0;
@@ -143,7 +143,7 @@ void yaslclear(sds s) {
  *
  * if the specified length is smaller than the current length, no operation
  * is performed. */
-sds yaslgrowzero(sds s, size_t len) {
+yastr yaslgrowzero(yastr s, size_t len) {
 	struct yastrhdr *sh = yaslheader(s);
 	size_t totlen, curlen = sh->len;
 
@@ -162,7 +162,7 @@ sds yaslgrowzero(sds s, size_t len) {
 
 /* Destructively modify the sds string 's' to hold the specified binary
  * safe string pointed by 't' of length 'len' bytes. */
-sds yaslcpylen(sds s, const char *t, size_t len) {
+yastr yaslcpylen(yastr s, const char *t, size_t len) {
 	struct yastrhdr *sh = yaslheader(s);
 	size_t totlen = sh->free + sh->len;
 
@@ -181,14 +181,14 @@ sds yaslcpylen(sds s, const char *t, size_t len) {
 
 /* Like yaslcpylen() but 't' must be a null-termined string so that the length
  * of the string is obtained with strlen(). */
-sds yaslcpy(sds s, const char *t) {
+yastr yaslcpy(yastr s, const char *t) {
 	return yaslcpylen(s, t, strlen(t));
 }
 
 /* Join an array of C strings using the specified separator (also a C string).
  * Returns the result as an sds string. */
-sds yasljoin(char **argv, int argc, char *sep, size_t seplen) {
-	sds join = yaslempty();
+yastr yasljoin(char **argv, int argc, char *sep, size_t seplen) {
+	yastr join = yaslempty();
 
 	for (int j = 0; j < argc; j++) {
 		join = yaslcat(join, argv[j]);
@@ -198,8 +198,8 @@ sds yasljoin(char **argv, int argc, char *sep, size_t seplen) {
 }
 
 /* Like yasljoin, but joins an array of SDS strings. */
-sds yasljoinyasl(sds *argv, int argc, const char *sep, size_t seplen) {
-	sds join = yaslempty();
+yastr yasljoinyasl(yastr *argv, int argc, const char *sep, size_t seplen) {
+	yastr join = yaslempty();
 
 	for (int j = 0; j < argc; j++) {
 		join = yaslcatyasl(join, argv[j]);
@@ -217,7 +217,7 @@ sds yasljoinyasl(sds *argv, int argc, const char *sep, size_t seplen) {
  *
  * The function returns the sds string pointer, that is always the same
  * as the input pointer since no resize is needed. */
-sds yaslmapchars(sds s, const char *from, const char *to, size_t setlen) {
+yastr yaslmapchars(yastr s, const char *from, const char *to, size_t setlen) {
 	for (size_t j = 0; j < yasllen(s); j++) {
 		for (size_t i = 0; i < setlen; i++) {
 			if (s[j] == from[i]) {
@@ -245,7 +245,7 @@ sds yaslmapchars(sds s, const char *from, const char *to, size_t setlen) {
  * s = yaslauto("Hello World");
  * yaslrange(s, 1, -1); => "ello World"
  */
-void yaslrange(sds s, ptrdiff_t start, ptrdiff_t end) {
+void yaslrange(yastr s, ptrdiff_t start, ptrdiff_t end) {
 	struct yastrhdr *sh = yaslheader(s);
 	size_t newlen, len = yasllen(s);
 
@@ -276,14 +276,14 @@ void yaslrange(sds s, ptrdiff_t start, ptrdiff_t end) {
 }
 
 /* Apply tolower() to every character of the sds string 's'. */
-void yasltolower(sds s) {
+void yasltolower(yastr s) {
 	for (size_t j = 0; j < yasllen(s); j++) {
 		s[j] = (char)tolower(s[j]);
 	}
 }
 
 /* Apply toupper() to every character of the sds string 's'. */
-void yasltoupper(sds s) {
+void yasltoupper(yastr s) {
 	for (size_t j = 0; j < yasllen(s); j++) {
 		s[j] = (char)toupper(s[j]);
 	}
@@ -303,7 +303,7 @@ void yasltoupper(sds s) {
  *
  * Output will be just "Hello World".
  */
-void yasltrim(sds s, const char *cset) {
+void yasltrim(yastr s, const char *cset) {
 	struct yastrhdr *sh = yaslheader(s);
 	char *start, *end, *sp, *ep;
 	size_t len;
@@ -333,7 +333,7 @@ void yasltrim(sds s, const char *cset) {
  * The output will be "2", but if we comment out the call to yaslupdatelen()
  * the output will be "6" as the string was modified but the logical length
  * remains 6 bytes. */
-void yaslupdatelen(sds s) {
+void yaslupdatelen(yastr s) {
 	struct yastrhdr *sh = yaslheader(s);
 	size_t reallen = strlen(s);
 	sh->free += (sh->len - reallen);
@@ -359,7 +359,7 @@ void yaslupdatelen(sds s) {
  * quotes or closed quotes followed by non space characters
  * as in: "foo"bar or "foo'
  */
-sds *yaslsplitargs(const char *line, int *argc) {
+yastr *yaslsplitargs(const char *line, int *argc) {
 	const char *p = line;
 	char *current = NULL;
 	char **vector = NULL;
@@ -486,13 +486,13 @@ err:
  * requires length arguments. sdssplit() is just the
  * same function but for zero-terminated strings.
  */
-sds *yaslsplitlen(const char *s, size_t len, const char *sep, size_t seplen, size_t *count) {
+yastr *yaslsplitlen(const char *s, size_t len, const char *sep, size_t seplen, size_t *count) {
 	size_t elements = 0, slots = 5, start = 0;
-	sds *tokens;
+	yastr *tokens;
 
 	if (seplen < 1) { return NULL; }
 
-	tokens = malloc(sizeof(sds)*slots);
+	tokens = malloc(sizeof(yastr)*slots);
 	if (tokens == NULL) { return NULL; }
 
 	if (len == 0) {
@@ -502,10 +502,10 @@ sds *yaslsplitlen(const char *s, size_t len, const char *sep, size_t seplen, siz
 	for (size_t j = 0; j < (len - (seplen - 1)); j++) {
 		/* make sure there is room for the next element and the final one */
 		if (slots < elements + 2) {
-			sds *newtokens;
+			yastr *newtokens;
 
 			slots *= 2;
-			newtokens = realloc(tokens, sizeof(sds) * slots);
+			newtokens = realloc(tokens, sizeof(yastr) * slots);
 			if (newtokens == NULL) { goto cleanup; }
 			tokens = newtokens;
 		}
@@ -542,7 +542,7 @@ cleanup:
  *
  * After the call, the passed sds string is no longer valid and all the
  * references must be substituted with the new pointer returned by the call. */
-sds yaslcat(sds s, const char *t) {
+yastr yaslcat(yastr s, const char *t) {
 	return yaslcatlen(s, t, strlen(t));
 }
 
@@ -550,7 +550,7 @@ sds yaslcat(sds s, const char *t) {
  *
  * After the call, the modified sds string is no longer valid and all the
  * references must be substituted with the new pointer returned by the call. */
-sds yaslcatyasl(sds s, const sds t) {
+yastr yaslcatyasl(yastr s, const yastr t) {
 	return yaslcatlen(s, t, yasllen(t));
 }
 
@@ -559,7 +559,7 @@ sds yaslcatyasl(sds s, const sds t) {
  *
  * After the call, the passed sds string is no longer valid and all the
  * references must be substituted with the new pointer returned by the call. */
-sds yaslcatlen(sds s, const void *t, size_t len) {
+yastr yaslcatlen(yastr s, const void *t, size_t len) {
 	struct yastrhdr *sh;
 	size_t curlen = yasllen(s);
 
@@ -579,7 +579,7 @@ sds yaslcatlen(sds s, const void *t, size_t len) {
  *
  * After the call, the modified sds string is no longer valid and all the
  * references must be substituted with the new pointer returned by the call. */
-sds yaslcatrepr(sds s, const char *p, size_t len) {
+yastr yaslcatrepr(yastr s, const char *p, size_t len) {
 	s = yaslcatlen(s, "\"", 1);
 	while(len--) {
 		switch(*p) {
@@ -607,7 +607,7 @@ sds yaslcatrepr(sds s, const char *p, size_t len) {
 
 /* Like yaslcatpritf() but gets va_list instead of being variadic. */
 #pragma GCC diagnostic ignored "-Wformat-nonliteral"
-sds yaslcatvprintf(sds s, const char *fmt, va_list ap) {
+yastr yaslcatvprintf(yastr s, const char *fmt, va_list ap) {
 	va_list cpy;
 	char *buf, *t;
 	size_t buflen = 16;
@@ -647,7 +647,7 @@ sds yaslcatvprintf(sds s, const char *fmt, va_list ap) {
  *
  * s = yaslcatprintf(yaslempty(), "... your format ...", args);
  */
-sds yaslcatprintf(sds s, const char *fmt, ...) {
+yastr yaslcatprintf(yastr s, const char *fmt, ...) {
 	va_list ap;
 	char *t;
 	va_start(ap, fmt);
@@ -660,13 +660,13 @@ sds yaslcatprintf(sds s, const char *fmt, ...) {
 /// Freeing
 
 /* Free an sds string. No operation is performed if 's' is NULL. */
-void yaslfree(sds s) {
+void yaslfree(yastr s) {
 	if (s == NULL) { return; }
 	free(yaslheader(s));
 }
 
 /* Free the result returned by yaslsplitlen(), or do nothing if 'tokens' is NULL. */
-void yaslfreesplitres(sds *tokens, size_t count) {
+void yaslfreesplitres(yastr *tokens, size_t count) {
 	if (!tokens) { return; }
 	while(count--) {
 		yaslfree(tokens[count]);
@@ -684,7 +684,7 @@ void yaslfreesplitres(sds *tokens, size_t count) {
  * 3) The free buffer at the end if any.
  * 4) The implicit null term.
  */
-size_t yaslAllocSize(sds s) {
+size_t yaslAllocSize(yastr s) {
 	struct yastrhdr *sh = yaslheader(s);
 
 	return sizeof(*sh) + sh->len + sh->free + 1;
@@ -710,7 +710,7 @@ size_t yaslAllocSize(sds s) {
  * ... check for nread <= 0 and handle it ...
  * yaslIncrLen(s, nread);
  */
-void yaslIncrLen(sds s, size_t incr) {
+void yaslIncrLen(yastr s, size_t incr) {
 	struct yastrhdr *sh = yaslheader(s);
 
 	assert(sh->free >= incr);
@@ -725,7 +725,7 @@ void yaslIncrLen(sds s, size_t incr) {
  *
  * Note: this does not change the *length* of the sds string as returned
  * by yasllen(), but only the free buffer space we have. */
-sds yaslMakeRoomFor(sds s, size_t addlen) {
+yastr yaslMakeRoomFor(yastr s, size_t addlen) {
 	struct yastrhdr *sh, *newsh;
 	size_t free = yaslavail(s);
 	size_t len, newlen;
@@ -752,7 +752,7 @@ sds yaslMakeRoomFor(sds s, size_t addlen) {
  *
  * After the call, the passed sds string is no longer valid and all the
  * references must be substituted with the new pointer returned by the call. */
-sds yaslRemoveFreeSpace(sds s) {
+yastr yaslRemoveFreeSpace(yastr s) {
 	struct yastrhdr *sh;
 
 	sh = yaslheader(s);
