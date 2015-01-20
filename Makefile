@@ -2,8 +2,8 @@ CFLAGS += -O2 -std=c99 -ggdb -fPIE -pie -fstack-protector-all -Wl,-z,relro -Wl,-
 CFLAGS += -Weverything -Wno-disabled-macro-expansion -Wno-vla -Wno-cast-align
 CC = clang
 
-SOURCES = test/twbctf.c src/sds.c
-HEADERS = test/twbctf.h src/sds.h
+SOURCES = test/twbctf.c src/yasl.c
+HEADERS = test/twbctf.h src/yasl.h
 MANPAGES = docs/sds.3 docs/sdsnew.3 docs/sdsfree.3
 
 all: sds-test $(MANPAGES)
