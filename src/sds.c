@@ -527,7 +527,9 @@ sds *sdssplitlen(const char *s, size_t len, const char *sep, size_t seplen, size
 
 cleanup:
 	{
-		for (size_t i = 0; i < elements; i++) sdsfree(tokens[i]);
+		for (size_t i = 0; i < elements; i++) {
+			sdsfree(tokens[i]);
+		}
 		free(tokens);
 		*count = 0;
 		return NULL;
