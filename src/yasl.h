@@ -48,56 +48,56 @@ struct sdshdr {
  */
 
 /// Initialization
-sds    sdsnew(const void *init, size_t initlen);
-sds    sdsdup(const sds s);
-sds    sdsempty(void);
-sds    sdsfromlonglong(long long value);
+sds    yaslnew(const void *init, size_t initlen);
+sds    yasldup(const sds s);
+sds    yaslempty(void);
+sds    yaslfromlonglong(long long value);
 
 
 /// Querying
-int    sdscmp(const sds s1, const sds s2);
+int    yaslcmp(const sds s1, const sds s2);
 
 
 /// Modification
-void   sdsclear(sds s);
-sds    sdsgrowzero(sds s, size_t len);
-sds    sdscpylen(sds s, const char *t, size_t len);
-sds    sdscpy(sds s, const char *t);
-sds    sdsjoin(char **argv, int argc, char *sep, size_t seplen);
-sds    sdsjoinsds(sds *argv, int argc, const char *sep, size_t seplen);
-sds    sdsmapchars(sds s, const char *from, const char *to, size_t setlen);
-void   sdsrange(sds s, ptrdiff_t start, ptrdiff_t end);
-void   sdstolower(sds s);
-void   sdstoupper(sds s);
-void   sdstrim(sds s, const char *cset);
-void   sdsupdatelen(sds s);
-sds   *sdssplitargs(const char *line, int *argc);
-sds   *sdssplitlen(const char *s, size_t len, const char *sep, size_t seplen, size_t *count);
+void   yaslclear(sds s);
+sds    yaslgrowzero(sds s, size_t len);
+sds    yaslcpylen(sds s, const char *t, size_t len);
+sds    yaslcpy(sds s, const char *t);
+sds    yasljoin(char **argv, int argc, char *sep, size_t seplen);
+sds    yasljoinyasl(sds *argv, int argc, const char *sep, size_t seplen);
+sds    yaslmapchars(sds s, const char *from, const char *to, size_t setlen);
+void   yaslrange(sds s, ptrdiff_t start, ptrdiff_t end);
+void   yasltolower(sds s);
+void   yasltoupper(sds s);
+void   yasltrim(sds s, const char *cset);
+void   yaslupdatelen(sds s);
+sds   *yaslsplitargs(const char *line, int *argc);
+sds   *yaslsplitlen(const char *s, size_t len, const char *sep, size_t seplen, size_t *count);
 
 // Concatenation
-sds    sdscat(sds s, const char *t);
-sds    sdscatsds(sds s, const sds t);
-sds    sdscatlen(sds s, const void *t, size_t len);
-sds    sdscatrepr(sds s, const char *p, size_t len);
-sds    sdscatvprintf(sds s, const char *fmt, va_list ap);
+sds    yaslcat(sds s, const char *t);
+sds    yaslcatyasl(sds s, const sds t);
+sds    yaslcatlen(sds s, const void *t, size_t len);
+sds    yaslcatrepr(sds s, const char *p, size_t len);
+sds    yaslcatvprintf(sds s, const char *fmt, va_list ap);
 #ifdef __GNUC__
-sds    sdscatprintf(sds s, const char *fmt, ...)
+sds    yaslcatprintf(sds s, const char *fmt, ...)
             __attribute__((format(printf, 2, 3)));
 #else
-sds    sdscatprintf(sds s, const char *fmt, ...);
+sds    yaslcatprintf(sds s, const char *fmt, ...);
 #endif
 
 
 /// Freeing
-void   sdsfree(sds s);
-void   sdsfreesplitres(sds *tokens, size_t count);
+void   yaslfree(sds s);
+void   yaslfreesplitres(sds *tokens, size_t count);
 
 
 /// Low-level API function prototypes
-size_t sdsAllocSize(sds s);
-void   sdsIncrLen(sds s, size_t incr);
-sds    sdsMakeRoomFor(sds s, size_t addlen);
-sds    sdsRemoveFreeSpace(sds s);
+size_t yaslAllocSize(sds s);
+void   yaslIncrLen(sds s, size_t incr);
+sds    yaslMakeRoomFor(sds s, size_t addlen);
+sds    yaslRemoveFreeSpace(sds s);
 
 
 /// Low-level helper functions
@@ -109,22 +109,22 @@ int    hex_digit_to_int(char c);
  * Inline functions
  */
 
-static inline struct sdshdr *sdsheader(const sds s) {
+static inline struct sdshdr *yaslheader(const sds s) {
 	/* The sdshdr pointer has a different alignment than the original char
 	 * pointer, so cast it through a void pointer to silence the warning. */
 	return (void *)(s - (sizeof (struct sdshdr)));
 }
 
-static inline sds sdsauto(const char *s) {
-	return sdsnew(s, s ? strlen(s) : 0);
+static inline sds yaslauto(const char *s) {
+	return yaslnew(s, s ? strlen(s) : 0);
 }
 
-static inline size_t sdsavail(const sds s) {
-	return sdsheader(s)->free;
+static inline size_t yaslavail(const sds s) {
+	return yaslheader(s)->free;
 }
 
-static inline size_t sdslen(const sds s) {
-	return sdsheader(s)->len;
+static inline size_t yasllen(const sds s) {
+	return yaslheader(s)->len;
 }
 
 
