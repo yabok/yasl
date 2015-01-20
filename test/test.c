@@ -1,241 +1,241 @@
 #include <stdbool.h>
 #include <string.h>
-#include <sds.h>
+#include <yasl.h>
 
 #include "twbctf.h"
 
-bool check_string_length        (void);
-bool create_with_length         (void);
-bool string_concat              (void);
-bool sdscpy_against_longer_str  (void);
-bool sdscpy_against_shorter_str (void);
-bool sdscatprintf_base_case     (void);
-bool sdstrim_trims_correctly    (void);
-bool sdsrange_one_one           (void);
-bool sdsrange_one_none          (void);
-bool sdsrange_ntwo_none         (void);
-bool sdsrange_two_one           (void);
-bool sdsrange_one_hund          (void);
-bool sdsrange_hund_hund         (void);
-bool sdscmp_foo_foa             (void);
-bool sdscmp_aar_bar             (void);
-bool sdscmp_bar_bar             (void);
-bool sdscatrepr_test            (void);
-bool sdsnew_check_free_len      (void);
-bool sdsMakeRoomFor_test        (void);
-bool sdsIncrLen_content         (void);
-bool sdsIncrLen_len             (void);
-bool sdsIncrLen_free            (void);
-bool test_sdstolower            (void);
-bool test_sdstoupper            (void);
+bool check_string_length         (void);
+bool create_with_length          (void);
+bool string_concat               (void);
+bool yaslcpy_against_longer_str  (void);
+bool yaslcpy_against_shorter_str (void);
+bool yaslcatprintf_base_case     (void);
+bool yasltrim_trims_correctly    (void);
+bool yaslrange_one_one           (void);
+bool yaslrange_one_none          (void);
+bool yaslrange_ntwo_none         (void);
+bool yaslrange_two_one           (void);
+bool yaslrange_one_hund          (void);
+bool yaslrange_hund_hund         (void);
+bool yaslcmp_foo_foa             (void);
+bool yaslcmp_aar_bar             (void);
+bool yaslcmp_bar_bar             (void);
+bool yaslcatrepr_test            (void);
+bool yaslnew_check_free_len      (void);
+bool yaslMakeRoomFor_test        (void);
+bool yaslIncrLen_content         (void);
+bool yaslIncrLen_len             (void);
+bool yaslIncrLen_free            (void);
+bool test_yasltolower            (void);
+bool test_yasltoupper            (void);
 
 static const struct test test_list [] = {
-	{ "create a string and obtain the length", check_string_length        },
-	{ "create a string with specified length", create_with_length         },
-	{ "string concatenation",                  string_concat              },
-	{ "sdscpy() against a longer string",      sdscpy_against_longer_str  },
-	{ "sdscpy() against a shorter string",     sdscpy_against_shorter_str },
-	{ "basic sdscatprintf() usecase",          sdscatprintf_base_case     },
-	{ "sdstrim() trims correctly",             sdstrim_trims_correctly    },
-	{ "sdsrange(..., 1, 1)",                   sdsrange_one_one           },
-	{ "sdsrange(..., 1, -1)",                  sdsrange_one_none          },
-	{ "sdsrange(..., -2, -1)",                 sdsrange_ntwo_none         },
-	{ "sdsrange(..., 2, 1)",                   sdsrange_two_one           },
-	{ "sdsrange(..., 1, 100)",                 sdsrange_one_hund          },
-	{ "sdsrange(..., 100, 100)",               sdsrange_hund_hund         },
-	{ "sdscmp(foo, foa)",                      sdscmp_foo_foa             },
-	{ "sdscmp(aar, bar)",                      sdscmp_aar_bar             },
-	{ "sdscmp(bar, bar)",                      sdscmp_bar_bar             },
-	{ "sdscatrepr(...data...)",                sdscatrepr_test            },
-	{ "sdsnew() free/len buffers",             sdsnew_check_free_len      },
-	{ "sdsMakeRoomFor()",                      sdsMakeRoomFor_test        },
-	{ "content after sdsIncrLen()",            sdsIncrLen_content         },
-	{ "len after sdsIncrLen()",                sdsIncrLen_len             },
-	{ "free after sdsIncrLen()",               sdsIncrLen_free            },
-	{ "sdstolower()",                          test_sdstolower            },
-	{ "sdstoupper()",                          test_sdstoupper            },
+	{ "create a string and obtain the length", check_string_length         },
+	{ "create a string with specified length", create_with_length          },
+	{ "string concatenation",                  string_concat               },
+	{ "yaslcpy() against a longer string",     yaslcpy_against_longer_str  },
+	{ "yaslcpy() against a shorter string",    yaslcpy_against_shorter_str },
+	{ "basic yaslcatprintf() usecase",         yaslcatprintf_base_case     },
+	{ "yasltrim() trims correctly",            yasltrim_trims_correctly    },
+	{ "yaslrange(..., 1, 1)",                  yaslrange_one_one           },
+	{ "yaslrange(..., 1, -1)",                 yaslrange_one_none          },
+	{ "yaslrange(..., -2, -1)",                yaslrange_ntwo_none         },
+	{ "yaslrange(..., 2, 1)",                  yaslrange_two_one           },
+	{ "yaslrange(..., 1, 100)",                yaslrange_one_hund          },
+	{ "yaslrange(..., 100, 100)",              yaslrange_hund_hund         },
+	{ "yaslcmp(foo, foa)",                     yaslcmp_foo_foa             },
+	{ "yaslcmp(aar, bar)",                     yaslcmp_aar_bar             },
+	{ "yaslcmp(bar, bar)",                     yaslcmp_bar_bar             },
+	{ "yaslcatrepr(...data...)",               yaslcatrepr_test            },
+	{ "yaslnew() free/len buffers",            yaslnew_check_free_len      },
+	{ "yaslMakeRoomFor()",                     yaslMakeRoomFor_test        },
+	{ "content after yaslIncrLen()",           yaslIncrLen_content         },
+	{ "len after yaslIncrLen()",               yaslIncrLen_len             },
+	{ "free after yaslIncrLen()",              yaslIncrLen_free            },
+	{ "yasltolower()",                         test_yasltolower            },
+	{ "yasltoupper()",                         test_yasltoupper            },
 };
 
-static inline void sdsfrees(sds *string) { if (*string) sdsfree(*string); }
-#define _sds_cleanup_ __attribute__((cleanup(sdsfrees)))
+static inline void yaslfrees(yastr *string) { if (*string) yaslfree(*string); }
+#define _yastr_cleanup_ __attribute__((cleanup(yaslfrees)))
 
 bool
 check_string_length(void) {
-	_sds_cleanup_ sds x = sdsauto("foo");
-	return (sdslen(x) == 3 && memcmp(x, "foo\0", 4) == 0);
+	_yastr_cleanup_ yastr x = yaslauto("foo");
+	return (yasllen(x) == 3 && memcmp(x, "foo\0", 4) == 0);
 }
 
 bool
 create_with_length(void) {
-	_sds_cleanup_ sds x = sdsnew("foo", 2);
-	return (sdslen(x) == 2 && memcmp(x, "fo\0", 3) == 0);
+	_yastr_cleanup_ yastr x = yaslnew("foo", 2);
+	return (yasllen(x) == 2 && memcmp(x, "fo\0", 3) == 0);
 }
 
 bool
 string_concat(void) {
-	_sds_cleanup_ sds x = sdsnew("foo", 2);
-	x = sdscat(x, "bar");
-	return (sdslen(x) == 5 && memcmp(x, "fobar\0", 6) == 0);
+	_yastr_cleanup_ yastr x = yaslnew("foo", 2);
+	x = yaslcat(x, "bar");
+	return (yasllen(x) == 5 && memcmp(x, "fobar\0", 6) == 0);
 }
 
 bool
-sdscpy_against_longer_str(void) {
-	_sds_cleanup_ sds x = sdsauto("foo");
-	x = sdscpy(x, "a");
-	return (sdslen(x) == 1 && memcmp(x, "a\0", 2) == 0);
+yaslcpy_against_longer_str(void) {
+	_yastr_cleanup_ yastr x = yaslauto("foo");
+	x = yaslcpy(x, "a");
+	return (yasllen(x) == 1 && memcmp(x, "a\0", 2) == 0);
 }
 
 bool
-sdscpy_against_shorter_str(void) {
-	_sds_cleanup_ sds x = sdsnew("foo",2);
-	x = sdscpy(x, "xxxxyyyyzzzz");
-	return (sdslen(x) == 12 && memcmp(x, "xxxxyyyyzzzz\0", 12) == 0);
+yaslcpy_against_shorter_str(void) {
+	_yastr_cleanup_ yastr x = yaslnew("foo",2);
+	x = yaslcpy(x, "xxxxyyyyzzzz");
+	return (yasllen(x) == 12 && memcmp(x, "xxxxyyyyzzzz\0", 12) == 0);
 }
 
 bool
-sdscatprintf_base_case(void) {
-	_sds_cleanup_ sds x = sdscatprintf(sdsempty(), "%d", 123);
-	return (sdslen(x) == 3 && memcmp(x, "123\0", 4) == 0);
+yaslcatprintf_base_case(void) {
+	_yastr_cleanup_ yastr x = yaslcatprintf(yaslempty(), "%d", 123);
+	return (yasllen(x) == 3 && memcmp(x, "123\0", 4) == 0);
 }
 
 bool
-sdstrim_trims_correctly(void) {
-	_sds_cleanup_ sds x = sdsauto("xxciaoyy");
-	sdstrim(x, "xy");
-	return (sdslen(x) == 4 && memcmp(x, "ciao\0", 5) == 0);
+yasltrim_trims_correctly(void) {
+	_yastr_cleanup_ yastr x = yaslauto("xxciaoyy");
+	yasltrim(x, "xy");
+	return (yasllen(x) == 4 && memcmp(x, "ciao\0", 5) == 0);
 }
 
 bool
-sdsrange_one_one (void) {
-	_sds_cleanup_ sds x = sdsauto("ciao");
-	_sds_cleanup_ sds y = sdsdup(x);
-	sdsrange(y, 1, 1);
-	return (sdslen(y) == 1 && memcmp(y, "i\0", 2) == 0);
+yaslrange_one_one(void) {
+	_yastr_cleanup_ yastr x = yaslauto("ciao");
+	_yastr_cleanup_ yastr y = yasldup(x);
+	yaslrange(y, 1, 1);
+	return (yasllen(y) == 1 && memcmp(y, "i\0", 2) == 0);
 }
 
 bool
-sdsrange_one_none (void) {
-	_sds_cleanup_ sds x = sdsauto("ciao");
-	_sds_cleanup_ sds y = sdsdup(x);
-	sdsrange(y, 1, -1);
-	return (sdslen(y) == 3 && memcmp(y, "iao\0", 4) == 0);
+yaslrange_one_none(void) {
+	_yastr_cleanup_ yastr x = yaslauto("ciao");
+	_yastr_cleanup_ yastr y = yasldup(x);
+	yaslrange(y, 1, -1);
+	return (yasllen(y) == 3 && memcmp(y, "iao\0", 4) == 0);
 }
 
 bool
-sdsrange_ntwo_none (void) {
-	_sds_cleanup_ sds x = sdsauto("ciao");
-	_sds_cleanup_ sds y = sdsdup(x);
-	sdsrange(y, -2, -1);
-	return (sdslen(y) == 2 && memcmp(y, "ao\0", 3) == 0);
+yaslrange_ntwo_none(void) {
+	_yastr_cleanup_ yastr x = yaslauto("ciao");
+	_yastr_cleanup_ yastr y = yasldup(x);
+	yaslrange(y, -2, -1);
+	return (yasllen(y) == 2 && memcmp(y, "ao\0", 3) == 0);
 }
 
 bool
-sdsrange_two_one (void) {
-	_sds_cleanup_ sds x = sdsauto("ciao");
-	_sds_cleanup_ sds y = sdsdup(x);
-	sdsrange(y, 2, 1);
-	return (sdslen(y) == 0 && memcmp(y, "\0", 1) == 0);
+yaslrange_two_one(void) {
+	_yastr_cleanup_ yastr x = yaslauto("ciao");
+	_yastr_cleanup_ yastr y = yasldup(x);
+	yaslrange(y, 2, 1);
+	return (yasllen(y) == 0 && memcmp(y, "\0", 1) == 0);
 }
 
 bool
-sdsrange_one_hund (void) {
-	_sds_cleanup_ sds x = sdsauto("ciao");
-	_sds_cleanup_ sds y = sdsdup(x);
-	sdsrange(y, 1, 100);
-	return (sdslen(y) == 3 && memcmp(y, "iao\0", 4) == 0);
+yaslrange_one_hund(void) {
+	_yastr_cleanup_ yastr x = yaslauto("ciao");
+	_yastr_cleanup_ yastr y = yasldup(x);
+	yaslrange(y, 1, 100);
+	return (yasllen(y) == 3 && memcmp(y, "iao\0", 4) == 0);
 }
 
 bool
-sdsrange_hund_hund (void) {
-	_sds_cleanup_ sds x = sdsauto("ciao");
-	_sds_cleanup_ sds y = sdsdup(x);
-	sdsrange(y, 100, 100);
-	return (sdslen(y) == 0 && memcmp(y, "\0", 1) == 0);
+yaslrange_hund_hund(void) {
+	_yastr_cleanup_ yastr x = yaslauto("ciao");
+	_yastr_cleanup_ yastr y = yasldup(x);
+	yaslrange(y, 100, 100);
+	return (yasllen(y) == 0 && memcmp(y, "\0", 1) == 0);
 }
 
 bool
-sdscmp_foo_foa (void) {
-	_sds_cleanup_ sds x = sdsauto("foo");
-	_sds_cleanup_ sds y = sdsauto("foa");
-	return (sdscmp(x, y) > 0);
+yaslcmp_foo_foa(void) {
+	_yastr_cleanup_ yastr x = yaslauto("foo");
+	_yastr_cleanup_ yastr y = yaslauto("foa");
+	return (yaslcmp(x, y) > 0);
 }
 
 bool
-sdscmp_aar_bar (void) {
-	_sds_cleanup_ sds x = sdsauto("aar");
-	_sds_cleanup_ sds y = sdsauto("bar");
-	return (sdscmp(x, y) < 0);
+yaslcmp_aar_bar(void) {
+	_yastr_cleanup_ yastr x = yaslauto("aar");
+	_yastr_cleanup_ yastr y = yaslauto("bar");
+	return (yaslcmp(x, y) < 0);
 }
 
 bool
-sdscmp_bar_bar (void) {
-	_sds_cleanup_ sds x = sdsauto("bar");
-	_sds_cleanup_ sds y = sdsauto("bar");
-	return (sdscmp(x, y) == 0);
+yaslcmp_bar_bar(void) {
+	_yastr_cleanup_ yastr x = yaslauto("bar");
+	_yastr_cleanup_ yastr y = yaslauto("bar");
+	return (yaslcmp(x, y) == 0);
 }
 
 bool
-sdscatrepr_test (void) {
-	_sds_cleanup_ sds x = sdsnew("\a\n\0foo\r", 7);
-	_sds_cleanup_ sds y = sdscatrepr(sdsempty(), x, sdslen(x));
+yaslcatrepr_test(void) {
+	_yastr_cleanup_ yastr x = yaslnew("\a\n\0foo\r", 7);
+	_yastr_cleanup_ yastr y = yaslcatrepr(yaslempty(), x, yasllen(x));
 	return (memcmp(y, "\"\\a\\n\\x00foo\\r\"", 15) == 0);
 }
 
 bool
-sdsnew_check_free_len (void) {
-	_sds_cleanup_ sds x = sdsauto("0");
-	struct sdshdr *sh = (void*) (x-(sizeof(struct sdshdr)));
+yaslnew_check_free_len(void) {
+	_yastr_cleanup_ yastr x = yaslauto("0");
+	struct yastrhdr *sh = (void*) (x-(sizeof(struct yastrhdr)));
 	return (sh->len == 1 && sh->free == 0);
 }
 
 bool
-sdsMakeRoomFor_test (void) {
-	_sds_cleanup_ sds x = sdsauto("0");
-	x = sdsMakeRoomFor(x, 1);
-	struct sdshdr *sh = (void*) (x-(sizeof(struct sdshdr)));
+yaslMakeRoomFor_test(void) {
+	_yastr_cleanup_ yastr x = yaslauto("0");
+	x = yaslMakeRoomFor(x, 1);
+	struct yastrhdr *sh = (void*) (x-(sizeof(struct yastrhdr)));
 	return (sh->len == 1 && sh->free > 0);
 }
 
 bool
-sdsIncrLen_content (void) {
-	_sds_cleanup_ sds x = sdsauto("0");
-	x = sdsMakeRoomFor(x, 1);
+yaslIncrLen_content(void) {
+	_yastr_cleanup_ yastr x = yaslauto("0");
+	x = yaslMakeRoomFor(x, 1);
 	x[1] = '1';
-	sdsIncrLen(x, 1);
+	yaslIncrLen(x, 1);
 	return (x[0] == '0' && x[1] == '1');
 }
 
 bool
-sdsIncrLen_len (void) {
-	_sds_cleanup_ sds x = sdsauto("0");
-	x = sdsMakeRoomFor(x, 1);
-	struct sdshdr *sh = (void*) (x-(sizeof(struct sdshdr)));
+yaslIncrLen_len(void) {
+	_yastr_cleanup_ yastr x = yaslauto("0");
+	x = yaslMakeRoomFor(x, 1);
+	struct yastrhdr *sh = (void*) (x-(sizeof(struct yastrhdr)));
 	x[1] = '1';
-	sdsIncrLen(x, 1);
+	yaslIncrLen(x, 1);
 	return (sh->len == 2);
 }
 
 bool
-sdsIncrLen_free (void) {
-	_sds_cleanup_ sds x = sdsauto("0");
-	x = sdsMakeRoomFor(x, 1);
-	struct sdshdr *sh = (void*) (x-(sizeof(struct sdshdr)));
+yaslIncrLen_free(void) {
+	_yastr_cleanup_ yastr x = yaslauto("0");
+	x = yaslMakeRoomFor(x, 1);
+	struct yastrhdr *sh = (void*) (x-(sizeof(struct yastrhdr)));
 	size_t oldfree = sh->free;
 	x[1] = '1';
-	sdsIncrLen(x, 1);
+	yaslIncrLen(x, 1);
 	return (sh->free == oldfree-1);
 }
 
 bool
-test_sdstolower (void) {
-	_sds_cleanup_ sds x = sdsauto("0FoO1bar\n");
-	sdstolower(x);
+test_yasltolower(void) {
+	_yastr_cleanup_ yastr x = yaslauto("0FoO1bar\n");
+	yasltolower(x);
 	return memcmp(x, "0foo1bar\n\0", 10) == 0;
 }
 
 bool
-test_sdstoupper (void) {
-	_sds_cleanup_ sds x = sdsauto("0FoO1bar\n");
-	sdstoupper(x);
+test_yasltoupper(void) {
+	_yastr_cleanup_ yastr x = yaslauto("0FoO1bar\n");
+	yasltoupper(x);
 	return memcmp(x, "0FOO1BAR\n\0", 10) == 0;
 }

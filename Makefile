@@ -6,11 +6,11 @@ SOURCES = test/twbctf.c src/yasl.c
 HEADERS = test/twbctf.h src/yasl.h
 MANPAGES = docs/sds.3 docs/sdsnew.3 docs/sdsfree.3
 
-all: sds-test $(MANPAGES)
+all: yasl-test $(MANPAGES)
 
 
-sds-test: $(SOURCES) $(HEADERS) test/test.c
-	@echo "==> Building sds-test"
+yasl-test: $(SOURCES) $(HEADERS) test/test.c
+	@echo "==> Building yasl-test"
 	$(CC) $(CFLAGS) -Isrc -o $@ $(SOURCES)
 
 docs/%.3: docs/%.rst
@@ -18,13 +18,13 @@ docs/%.3: docs/%.rst
 	sphinx-build -b man -E docs/ docs/
 
 
-test: sds-test
+test: yasl-test
 	@echo "==> Running test suite"
-	./sds-test
+	./yasl-test
 
 
 clean:
-	rm -f sds-test
+	rm -f yasl-test
 	rm docs/*.3
 
 
