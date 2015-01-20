@@ -1,6 +1,7 @@
 /* yasl, Yet Another String Library for C
  *
  * Copyright (c) 2006-2014, Salvatore Sanfilippo <antirez at gmail dot com>
+ * Copyright (c) 2014-2015, The yasl developers
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
