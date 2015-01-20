@@ -26,6 +26,8 @@ bool sdsMakeRoomFor_test        (void);
 bool sdsIncrLen_content         (void);
 bool sdsIncrLen_len             (void);
 bool sdsIncrLen_free            (void);
+bool test_sdstolower            (void);
+bool test_sdstoupper            (void);
 
 static const struct test test_list [] = {
 	{ "create a string and obtain the length", check_string_length        },
@@ -50,6 +52,8 @@ static const struct test test_list [] = {
 	{ "content after sdsIncrLen()",            sdsIncrLen_content         },
 	{ "len after sdsIncrLen()",                sdsIncrLen_len             },
 	{ "free after sdsIncrLen()",               sdsIncrLen_free            },
+	{ "sdstolower()",                          test_sdstolower            },
+	{ "sdstoupper()",                          test_sdstoupper            },
 };
 
 static inline void sdsfrees(sds *string) { if (*string) sdsfree(*string); }
@@ -220,4 +224,18 @@ sdsIncrLen_free (void) {
 	x[1] = '1';
 	sdsIncrLen(x, 1);
 	return (sh->free == oldfree-1);
+}
+
+bool
+test_sdstolower (void) {
+	_sds_cleanup_ sds x = sdsauto("0FoO1bar\n");
+	sdstolower(x);
+	return memcmp(x, "0foo1bar\n\0", 10) == 0;
+}
+
+bool
+test_sdstoupper (void) {
+	_sds_cleanup_ sds x = sdsauto("0FoO1bar\n");
+	sdstoupper(x);
+	return memcmp(x, "0FOO1BAR\n\0", 10) == 0;
 }
