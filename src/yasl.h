@@ -1,4 +1,4 @@
-/* SDS (Simple Dynamic Strings), A C dynamic strings library.
+/* yasl, Yet Another String Library for C
  *
  * Copyright (c) 2006-2014, Salvatore Sanfilippo <antirez at gmail dot com>
  * All rights reserved.
@@ -25,10 +25,10 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef SDS_H
-#define SDS_H
+#ifndef YASL_H
+#define YASL_H
 
-#define SDS_MAX_PREALLOC (1024*1024)
+#define YASL_MAX_PREALLOC (1024*1024)
 
 #include <stdarg.h>
 #include <stddef.h>
