@@ -450,7 +450,13 @@ yastr *yaslsplitargs(const char *line, int *argc) {
 				if (*p) { p++; }
 			}
 			/* add the token to the vector */
-			vector = realloc(vector, (unsigned long)((*argc) + 1) * (sizeof (char *)));
+
+			char **tmp = realloc(vector, (unsigned long)((*argc) + 1) * (sizeof (char *)));
+			if (!tmp) {
+				goto err;
+			}
+			vector = tmp;
+
 			vector[*argc] = current;
 			(*argc)++;
 			current = NULL;
@@ -754,11 +760,14 @@ yastr yaslMakeRoomFor(yastr s, size_t addlen) {
  * After the call, the passed yasl string is no longer valid and all the
  * references must be substituted with the new pointer returned by the call. */
 yastr yaslRemoveFreeSpace(yastr s) {
-	struct yastrhdr *sh;
+	struct yastrhdr *sh = yaslheader(s);
 
-	sh = yaslheader(s);
-	sh = realloc(sh, sizeof(struct yastrhdr) + sh->len + 1);
-	sh->free = 0;
+	struct yastrhdr *tmp = realloc(sh, sizeof(struct yastrhdr) + sh->len + 1);
+	if (tmp) {
+		sh = tmp;
+		sh->free = 0;
+	}
+
 	return sh->buf;
 }
 

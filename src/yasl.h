@@ -94,7 +94,7 @@ void   yaslfree(yastr s);
 void   yaslfreesplitres(yastr *tokens, size_t count);
 
 
-/// Low-level API function prototypes
+/// Low-level functions
 size_t yaslAllocSize(yastr s);
 void   yaslIncrLen(yastr s, size_t incr);
 yastr  yaslMakeRoomFor(yastr s, size_t addlen);
