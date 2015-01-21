@@ -543,7 +543,7 @@ cleanup:
 	}
 }
 
-// Concatenation
+/// Concatenation
 
 /* Append the specified null termianted C string to the yasl string 's'.
  *

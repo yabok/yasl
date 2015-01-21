@@ -75,7 +75,7 @@ void   yaslupdatelen(yastr s);
 yastr *yaslsplitargs(const char *line, int *argc);
 yastr *yaslsplitlen(const char *s, size_t len, const char *sep, size_t seplen, size_t *count);
 
-// Concatenation
+/// Concatenation
 yastr  yaslcat(yastr s, const char *t);
 yastr  yaslcatyasl(yastr s, const yastr t);
 yastr  yaslcatlen(yastr s, const void *t, size_t len);
