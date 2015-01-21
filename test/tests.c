@@ -1,5 +1,3 @@
-#include <stdbool.h>
-#include <string.h>
 #include <yasl.h>
 
 #include "twbctf.h"
@@ -29,7 +27,7 @@ bool yaslIncrLen_free            (void);
 bool test_yasltolower            (void);
 bool test_yasltoupper            (void);
 
-static const struct test test_list [] = {
+const struct test test_list [] = {
 	{ "create a string and obtain the length", check_string_length         },
 	{ "create a string with specified length", create_with_length          },
 	{ "string concatenation",                  string_concat               },

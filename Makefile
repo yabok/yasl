@@ -9,7 +9,7 @@ MANPAGES = docs/yasl.3 docs/yaslnew.3 docs/yaslfree.3
 all: yasl-test $(MANPAGES)
 
 
-yasl-test: $(SOURCES) $(HEADERS) test/test.c
+yasl-test: $(SOURCES) $(HEADERS) test/tests.c
 	@echo "==> Building yasl-test"
 	$(CC) $(CFLAGS) -Isrc -o $@ $(SOURCES)
 
