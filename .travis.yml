@@ -1,27 +1,23 @@
 language: c
 compiler: clang
 
-script:
-  - make
-  - make test
-
 install:
   - sudo apt-get update -qq
   - sudo apt-get install -y python-sphinx
 
 env:
   global:
-   # The next declaration is the encrypted COVERITY_SCAN_TOKEN, created
-   #   via the "travis encrypt" command using the project repo's public key
-   - secure: "IrlWvVLYTS+zVEDTITlcwBIBo5VGWuoAsSDIVHsrdbDxEPr+ysDlYxq27WEWuOf+Um3/S6pch6jkEfhYFb24Bd+F7JkmW+Sv7gBXXYGwDpM6oJENiFt1OajTcOSFMqJ9UirvGoSzzx7SwCH6zUC5YUd/LJgmJLKIMI8f7vYjRAg="
+    - secure: "IrlWvVLYTS+zVEDTITlcwBIBo5VGWuoAsSDIVHsrdbDxEPr+ysDlYxq27WEWuOf+Um3/S6pch6jkEfhYFb24Bd+F7JkmW+Sv7gBXXYGwDpM6oJENiFt1OajTcOSFMqJ9UirvGoSzzx7SwCH6zUC5YUd/LJgmJLKIMI8f7vYjRAg="
 
 addons:
   coverity_scan:
     project:
       name: "yabok/yasl"
       description: "Build submitted via Travis CI"
-    notification_email: johannes@kyriasis.com
-    build_command_prepend: "make clean"
-    build_command_prepend: "cov-configure --template --comptype clangcc --compiler clang; make clean"
-    build_command: "make"
+    notification_email: yasl@kyriasis.com
+    build_command_prepend: cov-configure --template --comptype clangcc --compiler clang
+    build_command: make
     branch_pattern: coverity_scan
+
+script:
+  - make test
