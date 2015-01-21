@@ -7,7 +7,7 @@
 typedef bool (* test_p) (void);
 
 struct test {
-    char * desc;
+    const char * desc;
     test_p func;
 };
 
