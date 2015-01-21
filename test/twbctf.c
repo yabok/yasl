@@ -50,7 +50,7 @@ main(signed argc, char * argv []) {
 		} else {
 			printf("Testing %-*s\t[ PEND ]\r", maxl, test_list[i].desc);
 			bool result = test_list[i].func();
-			char * r = result ? "\x1b[32mPASS" : "\x1b[31mFAIL";
+			const char * r = result ? "\x1b[32mPASS" : "\x1b[31mFAIL";
 			printf("Testing %-*s\t[ %s \x1b[0m]\n", maxl, test_list[i].desc, r);
 			ret = ret || !result;
 		}
