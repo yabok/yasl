@@ -27,17 +27,15 @@
 #include "twbctf.h"
 #include "test.c"
 
-// Forward Declarations //
-#define TEST_COUNT ((sizeof test_list)/(sizeof (struct test)))
-
 // Run Suite //
 int32_t
 main(signed argc, char * argv []) {
 
-	const size_t tc = TEST_COUNT;
+	const size_t tc = (sizeof test_list)/(sizeof (struct test));
 	bool results [tc];
 	bool shortened = (argc > 1 && *(int16_t * )argv[1] == *(int16_t * )"-s");
 	int8_t maxl = 0;
+	uint8_t ret = 0;
 
 	for ( size_t i = 0; i < tc; i ++ ) {
 		int8_t cur = (int8_t )strlen(test_list[i].desc);
@@ -48,15 +46,21 @@ main(signed argc, char * argv []) {
 		if ( shortened ) {
 			results[i] = test_list[i].func();
 			putchar(results[i] ? '.' : '!');
+			ret = results[i] ? ret : 1;
 		} else {
 			printf("Testing %-*s\t[ PEND ]\r", maxl, test_list[i].desc);
-			char * r = test_list[i].func() ? "\x1b[32mPASS" : "\x1b[31mFAIL";
+			bool result = test_list[i].func();
+			char * r = result ? "\x1b[32mPASS" : "\x1b[31mFAIL";
 			printf("Testing %-*s\t[ %s \x1b[0m]\n", maxl, test_list[i].desc, r);
+			ret = result ? ret : 1;
 		}
-	} if ( shortened ) {
+	}
+	if ( shortened ) {
 		printf("\x1b[0m\n\nFailed Tests:\n");
 		for ( size_t i = 0; i < tc; i ++ ) {
 			!results[i] ? printf(" %s\n", test_list[i].desc) : printf("");
 		}
-	} return 0;
+	}
+
+	return ret;
 }
