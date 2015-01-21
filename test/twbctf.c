@@ -46,13 +46,13 @@ main(signed argc, char * argv []) {
 		if ( shortened ) {
 			results[i] = test_list[i].func();
 			putchar(results[i] ? '.' : '!');
-			ret = results[i] ? ret : 1;
+			ret = ret || !results[i];
 		} else {
 			printf("Testing %-*s\t[ PEND ]\r", maxl, test_list[i].desc);
 			bool result = test_list[i].func();
 			char * r = result ? "\x1b[32mPASS" : "\x1b[31mFAIL";
 			printf("Testing %-*s\t[ %s \x1b[0m]\n", maxl, test_list[i].desc, r);
-			ret = result ? ret : 1;
+			ret = ret || !result;
 		}
 	}
 	if ( shortened ) {
