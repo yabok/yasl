@@ -31,10 +31,10 @@ struct yastrhdr {
 
 /// Initialization
 yastr
-yaslnew(const void *init, size_t initlen);
+yaslnew(const void * init, size_t initlen);
 
 static inline yastr
-yaslauto(const char *s);
+yaslauto(const char * s);
 
 yastr
 yasldup(const yastr s);
@@ -65,19 +65,19 @@ yastr
 yaslgrowzero(yastr s, size_t len);
 
 yastr
-yaslcpylen(yastr s, const char *t, size_t len);
+yaslcpylen(yastr s, const char * t, size_t len);
 
 yastr
-yaslcpy(yastr s, const char *t);
+yaslcpy(yastr s, const char * t);
 
 yastr
-yasljoin(char **argv, int argc, char *sep, size_t seplen);
+yasljoin(char ** argv, int argc, char * sep, size_t seplen);
 
 yastr
-yasljoinyasl(yastr *argv, int argc, const char *sep, size_t seplen);
+yasljoinyasl(yastr * argv, int argc, const char * sep, size_t seplen);
 
 yastr
-yaslmapchars(yastr s, const char *from, const char *to, size_t setlen);
+yaslmapchars(yastr s, const char * from, const char * to, size_t setlen);
 
 void
 yaslrange(yastr s, ptrdiff_t start, ptrdiff_t end);
@@ -89,41 +89,41 @@ void
 yasltoupper(yastr s);
 
 void
-yasltrim(yastr s, const char *cset);
+yasltrim(yastr s, const char * cset);
 
 void
 yaslupdatelen(yastr s);
 
 yastr *
-yaslsplitargs(const char *line, int *argc);
+yaslsplitargs(const char * line, int * argc);
 
 yastr *
-yaslsplitlen(const char *s, size_t len, const char *sep, size_t seplen, size_t *count);
+yaslsplitlen(const char * s, size_t len, const char * sep, size_t seplen, size_t * count);
 
 
 /// Concatenation
 yastr
-yaslcat(yastr s, const char *t);
+yaslcat(yastr s, const char * t);
 
 yastr
 yaslcatyasl(yastr s, const yastr t);
 
 yastr
-yaslcatlen(yastr s, const void *t, size_t len);
+yaslcatlen(yastr s, const void * t, size_t len);
 
 yastr
-yaslcatrepr(yastr s, const char *p, size_t len);
+yaslcatrepr(yastr s, const char * p, size_t len);
 
 yastr
-yaslcatvprintf(yastr s, const char *fmt, va_list ap);
+yaslcatvprintf(yastr s, const char * fmt, va_list ap);
 
 #ifdef __GNUC__
 yastr
-yaslcatprintf(yastr s, const char *fmt, ...)
+yaslcatprintf(yastr s, const char * fmt, ...)
         __attribute__((format(printf, 2, 3)));
 #else
 yastr
-yaslcatprintf(yastr s, const char *fmt, ...);
+yaslcatprintf(yastr s, const char * fmt, ...);
 #endif
 
 
@@ -132,7 +132,7 @@ void
 yaslfree(yastr s);
 
 void
-yaslfreesplitres(yastr *tokens, size_t count);
+yaslfreesplitres(yastr * tokens, size_t count);
 
 
 /// Low-level functions
@@ -170,7 +170,7 @@ static inline struct yastrhdr *yaslheader(const yastr s) {
 	return (void *)(s - (sizeof (struct yastrhdr)));
 }
 
-static inline yastr yaslauto(const char *s) {
+static inline yastr yaslauto(const char * s) {
 	return yaslnew(s, s ? strlen(s) : 0);
 }
 

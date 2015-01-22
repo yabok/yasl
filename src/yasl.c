@@ -32,8 +32,8 @@
  * end of the string. However the string is binary safe and can contain
  * \0 characters in the middle, as the length is stored in the yasl header. */
 yastr
-yaslnew(const void *init, size_t initlen) {
-	struct yastrhdr *sh;
+yaslnew(const void * init, size_t initlen) {
+	struct yastrhdr * sh;
 
 	if (init) {
 		sh = malloc(sizeof(struct yastrhdr) + initlen + 1);
@@ -70,7 +70,7 @@ yaslempty(void) {
  */
 yastr
 yaslfromlonglong(long long value) {
-	char buf[32], *p;
+	char buf[32], * p;
 	unsigned long long v;
 
 	v = (unsigned long long)((value < 0) ? -value : value);
@@ -120,7 +120,7 @@ yaslcmp(const yastr s1, const yastr s2) {
  * number of bytes previously available. */
 void
 yaslclear(yastr s) {
-	struct yastrhdr *sh = yaslheader(s);
+	struct yastrhdr * sh = yaslheader(s);
 	sh->free += sh->len;
 	sh->len = 0;
 	sh->buf[0] = '\0';
@@ -133,7 +133,7 @@ yaslclear(yastr s) {
  * is performed. */
 yastr
 yaslgrowzero(yastr s, size_t len) {
-	struct yastrhdr *sh = yaslheader(s);
+	struct yastrhdr * sh = yaslheader(s);
 	size_t totlen, curlen = sh->len;
 
 	if (len <= curlen) { return s; }
@@ -152,8 +152,8 @@ yaslgrowzero(yastr s, size_t len) {
 /* Destructively modify the yasl string 's' to hold the specified binary
  * safe string pointed by 't' of length 'len' bytes. */
 yastr
-yaslcpylen(yastr s, const char *t, size_t len) {
-	struct yastrhdr *sh = yaslheader(s);
+yaslcpylen(yastr s, const char * t, size_t len) {
+	struct yastrhdr * sh = yaslheader(s);
 	size_t totlen = sh->free + sh->len;
 
 	if (totlen < len) {
@@ -172,14 +172,14 @@ yaslcpylen(yastr s, const char *t, size_t len) {
 /* Like yaslcpylen() but 't' must be a null-termined string so that the length
  * of the string is obtained with strlen(). */
 yastr
-yaslcpy(yastr s, const char *t) {
+yaslcpy(yastr s, const char * t) {
 	return yaslcpylen(s, t, strlen(t));
 }
 
 /* Join an array of C strings using the specified separator (also a C string).
  * Returns the result as a yasl string. */
 yastr
-yasljoin(char **argv, int argc, char *sep, size_t seplen) {
+yasljoin(char ** argv, int argc, char * sep, size_t seplen) {
 	yastr join = yaslempty();
 
 	for (int j = 0; j < argc; j++) {
@@ -191,7 +191,7 @@ yasljoin(char **argv, int argc, char *sep, size_t seplen) {
 
 /* Like yasljoin, but joins an array of yasl strings. */
 yastr
-yasljoinyasl(yastr *argv, int argc, const char *sep, size_t seplen) {
+yasljoinyasl(yastr * argv, int argc, const char * sep, size_t seplen) {
 	yastr join = yaslempty();
 
 	for (int j = 0; j < argc; j++) {
@@ -211,7 +211,7 @@ yasljoinyasl(yastr *argv, int argc, const char *sep, size_t seplen) {
  * The function returns the yasl string pointer, that is always the same
  * as the input pointer since no resize is needed. */
 yastr
-yaslmapchars(yastr s, const char *from, const char *to, size_t setlen) {
+yaslmapchars(yastr s, const char * from, const char * to, size_t setlen) {
 	for (size_t j = 0; j < yasllen(s); j++) {
 		for (size_t i = 0; i < setlen; i++) {
 			if (s[j] == from[i]) {
@@ -241,7 +241,7 @@ yaslmapchars(yastr s, const char *from, const char *to, size_t setlen) {
  */
 void
 yaslrange(yastr s, ptrdiff_t start, ptrdiff_t end) {
-	struct yastrhdr *sh = yaslheader(s);
+	struct yastrhdr * sh = yaslheader(s);
 	size_t newlen, len = yasllen(s);
 
 	if (len == 0) { return; }
@@ -301,9 +301,9 @@ yasltoupper(yastr s) {
  * Output will be just "Hello World".
  */
 void
-yasltrim(yastr s, const char *cset) {
-	struct yastrhdr *sh = yaslheader(s);
-	char *start, *end, *sp, *ep;
+yasltrim(yastr s, const char * cset) {
+	struct yastrhdr * sh = yaslheader(s);
+	char * start, * end, * sp, * ep;
 	size_t len;
 
 	sp = start = s;
@@ -333,7 +333,7 @@ yasltrim(yastr s, const char *cset) {
  * remains 6 bytes. */
 void
 yaslupdatelen(yastr s) {
-	struct yastrhdr *sh = yaslheader(s);
+	struct yastrhdr * sh = yaslheader(s);
 	size_t reallen = strlen(s);
 	sh->free += (sh->len - reallen);
 	sh->len = reallen;
@@ -359,10 +359,10 @@ yaslupdatelen(yastr s) {
  * as in: "foo"bar or "foo'
  */
 yastr *
-yaslsplitargs(const char *line, int *argc) {
-	const char *p = line;
-	char *current = NULL;
-	char **vector = NULL;
+yaslsplitargs(const char * line, int * argc) {
+	const char * p = line;
+	char * current = NULL;
+	char ** vector = NULL;
 
 	*argc = 0;
 	while(1) {
@@ -450,7 +450,7 @@ yaslsplitargs(const char *line, int *argc) {
 			}
 			/* add the token to the vector */
 
-			char **tmp = realloc(vector, (unsigned long)((*argc) + 1) * (sizeof (char *)));
+			char ** tmp = realloc(vector, (unsigned long)((*argc) + 1) * (sizeof (char *)));
 			if (!tmp) {
 				goto err;
 			}
@@ -493,9 +493,9 @@ err:
  * same function but for zero-terminated strings.
  */
 yastr *
-yaslsplitlen(const char *s, size_t len, const char *sep, size_t seplen, size_t *count) {
+yaslsplitlen(const char * s, size_t len, const char * sep, size_t seplen, size_t * count) {
 	size_t elements = 0, slots = 5, start = 0;
-	yastr *tokens;
+	yastr * tokens;
 
 	if (seplen < 1) { return NULL; }
 
@@ -509,7 +509,7 @@ yaslsplitlen(const char *s, size_t len, const char *sep, size_t seplen, size_t *
 	for (size_t j = 0; j < (len - (seplen - 1)); j++) {
 		/* make sure there is room for the next element and the final one */
 		if (slots < elements + 2) {
-			yastr *newtokens;
+			yastr * newtokens;
 
 			slots *= 2;
 			newtokens = realloc(tokens, sizeof(yastr) * slots);
@@ -550,7 +550,7 @@ cleanup:
  * After the call, the passed yasl string is no longer valid and all the
  * references must be substituted with the new pointer returned by the call. */
 yastr
-yaslcat(yastr s, const char *t) {
+yaslcat(yastr s, const char * t) {
 	return yaslcatlen(s, t, strlen(t));
 }
 
@@ -569,8 +569,8 @@ yaslcatyasl(yastr s, const yastr t) {
  * After the call, the passed yasl string is no longer valid and all the
  * references must be substituted with the new pointer returned by the call. */
 yastr
-yaslcatlen(yastr s, const void *t, size_t len) {
-	struct yastrhdr *sh;
+yaslcatlen(yastr s, const void * t, size_t len) {
+	struct yastrhdr * sh;
 	size_t curlen = yasllen(s);
 
 	s = yaslMakeRoomFor(s, len);
@@ -590,7 +590,7 @@ yaslcatlen(yastr s, const void *t, size_t len) {
  * After the call, the modified yasl string is no longer valid and all the
  * references must be substituted with the new pointer returned by the call. */
 yastr
-yaslcatrepr(yastr s, const char *p, size_t len) {
+yaslcatrepr(yastr s, const char * p, size_t len) {
 	s = yaslcatlen(s, "\"", 1);
 	while(len--) {
 		switch(*p) {
@@ -619,9 +619,9 @@ yaslcatrepr(yastr s, const char *p, size_t len) {
 /* Like yaslcatpritf() but gets va_list instead of being variadic. */
 #pragma GCC diagnostic ignored "-Wformat-nonliteral"
 yastr
-yaslcatvprintf(yastr s, const char *fmt, va_list ap) {
+yaslcatvprintf(yastr s, const char * fmt, va_list ap) {
 	va_list cpy;
-	char *buf, *t;
+	char * buf, * t;
 	size_t buflen = 16;
 
 	while(1) {
@@ -661,9 +661,9 @@ yaslcatvprintf(yastr s, const char *fmt, va_list ap) {
  * s = yaslcatprintf(yaslempty(), "... your format ...", args);
  */
 yastr
-yaslcatprintf(yastr s, const char *fmt, ...) {
+yaslcatprintf(yastr s, const char * fmt, ...) {
 	va_list ap;
-	char *t;
+	char * t;
 	va_start(ap, fmt);
 	t = yaslcatvprintf(s, fmt, ap);
 	va_end(ap);
@@ -682,7 +682,7 @@ yaslfree(yastr s) {
 
 /* Free the result returned by yaslsplitlen(), or do nothing if 'tokens' is NULL. */
 void
-yaslfreesplitres(yastr *tokens, size_t count) {
+yaslfreesplitres(yastr * tokens, size_t count) {
 	if (!tokens) { return; }
 	while(count--) {
 		yaslfree(tokens[count]);
@@ -702,7 +702,7 @@ yaslfreesplitres(yastr *tokens, size_t count) {
  */
 size_t
 yaslAllocSize(yastr s) {
-	struct yastrhdr *sh = yaslheader(s);
+	struct yastrhdr * sh = yaslheader(s);
 
 	return sizeof(*sh) + sh->len + sh->free + 1;
 }
@@ -729,7 +729,7 @@ yaslAllocSize(yastr s) {
  */
 void
 yaslIncrLen(yastr s, size_t incr) {
-	struct yastrhdr *sh = yaslheader(s);
+	struct yastrhdr * sh = yaslheader(s);
 
 	assert(sh->free >= incr);
 	sh->len += incr;
@@ -745,7 +745,7 @@ yaslIncrLen(yastr s, size_t incr) {
  * by yasllen(), but only the free buffer space we have. */
 yastr
 yaslMakeRoomFor(yastr s, size_t addlen) {
-	struct yastrhdr *sh, *newsh;
+	struct yastrhdr * sh, * newsh;
 	size_t free = yaslavail(s);
 	size_t len, newlen;
 
@@ -773,9 +773,9 @@ yaslMakeRoomFor(yastr s, size_t addlen) {
  * references must be substituted with the new pointer returned by the call. */
 yastr
 yaslRemoveFreeSpace(yastr s) {
-	struct yastrhdr *sh = yaslheader(s);
+	struct yastrhdr * sh = yaslheader(s);
 
-	struct yastrhdr *tmp = realloc(sh, sizeof(struct yastrhdr) + sh->len + 1);
+	struct yastrhdr * tmp = realloc(sh, sizeof(struct yastrhdr) + sh->len + 1);
 	if (tmp) {
 		sh = tmp;
 		sh->free = 0;
