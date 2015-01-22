@@ -17,7 +17,7 @@
 #include "yasl.h"
 
 
-/// Initialization
+// Initialization //
 
 /* Create a new yasl string with the content specified by the 'init' pointer
  * and 'initlen'.
@@ -85,7 +85,7 @@ yaslfromlonglong(long long value) {
 }
 
 
-/// Querying
+// Querying //
 
 /* Compare two yasl strings s1 and s2 with memcmp().
  *
@@ -112,7 +112,7 @@ yaslcmp(const yastr s1, const yastr s2) {
 }
 
 
-/// Modification
+// Modification //
 
 /* Modify a yasl string in-place to make it empty (zero length).
  * However all the existing buffer is not discarded but set as free space
@@ -543,7 +543,7 @@ cleanup:
 	}
 }
 
-/// Concatenation
+// Concatenation //
 
 /* Append the specified null termianted C string to the yasl string 's'.
  *
@@ -671,7 +671,7 @@ yaslcatprintf(yastr s, const char * fmt, ...) {
 }
 
 
-/// Freeing
+// Freeing //
 
 /* Free a yasl string. No operation is performed if 's' is NULL. */
 void
@@ -691,7 +691,7 @@ yaslfreesplitres(yastr * tokens, size_t count) {
 }
 
 
-// Low-level functions
+// Low-level functions //
 
 /* Return the total size of the allocation of the specifed yasl string,
  * including:
@@ -785,7 +785,7 @@ yaslRemoveFreeSpace(yastr s) {
 }
 
 
-/// Low-level helper functions
+// Low-level helper functions //
 
 /* Helper function for yaslsplitargs() that returns non zero if 'c'
  * is a valid hex digit. */

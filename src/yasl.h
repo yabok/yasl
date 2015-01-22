@@ -29,7 +29,7 @@ struct yastrhdr {
  * User API function prototypes
  */
 
-/// Initialization
+// Initialization //
 yastr
 yaslnew(const void * init, size_t initlen);
 
@@ -46,7 +46,7 @@ yastr
 yaslfromlonglong(long long value);
 
 
-/// Querying
+// Querying //
 static inline size_t
 yaslavail(const yastr s);
 
@@ -57,7 +57,7 @@ int
 yaslcmp(const yastr s1, const yastr s2);
 
 
-/// Modification
+// Modification //
 void
 yaslclear(yastr s);
 
@@ -101,7 +101,7 @@ yastr *
 yaslsplitlen(const char * s, size_t len, const char * sep, size_t seplen, size_t * count);
 
 
-/// Concatenation
+// Concatenation //
 yastr
 yaslcat(yastr s, const char * t);
 
@@ -127,7 +127,7 @@ yaslcatprintf(yastr s, const char * fmt, ...);
 #endif
 
 
-/// Freeing
+// Freeing //
 void
 yaslfree(yastr s);
 
@@ -135,7 +135,7 @@ void
 yaslfreesplitres(yastr * tokens, size_t count);
 
 
-/// Low-level functions
+// Low-level functions //
 static inline struct yastrhdr *
 yaslheader(const yastr s);
 
@@ -152,7 +152,7 @@ yastr
 yaslRemoveFreeSpace(yastr s);
 
 
-/// Low-level helper functions
+// Low-level helper functions //
 int
 is_hex_digit(char c);
 
