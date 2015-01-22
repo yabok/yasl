@@ -13,6 +13,12 @@ using yasl strings use is :c:`yastr` which is a :c:`char *` :c:`typedef`. Since
 it's just a typedef its use is not strictly necessary, but is recommended to
 make it clear that the given string is a yasl string.
 
+When a function that has the :c:`yastr` return type returns NULL it is
+signifying an error condition and all functions noted as possibly returning
+NULL must have their return value checked on each invocation. Passing a NULL
+pointer as an argument to a function expecting a :c:`yastr` is undefined and
+invalid.
+
 The second data structure is the following struct:
 
 .. code:: c
@@ -190,9 +196,12 @@ This function may :c:`realloc()` the string so all references to the original
 :c:`yastr` should be treated as invalid and should be replaced with the one
 returned by this function.
 
-This function may also return :c:`NULL` in case the :c:`realloc()` call failed,
-in which case the original :c:`yastr` references are still valid and should be
+This function may return :c:`NULL` in case the :c:`realloc()` call failed, in
+which case the original :c:`yastr` references are still valid and should be
 used.
+
+If the :c:`t` argument to the :c:`yaslcpylen()` function is a NULL pointer, no
+operation is performed and the function will return NULL.
 
 yaslcpy
 ~~~~~~~
@@ -210,10 +219,12 @@ This function may :c:`realloc()` the string so all references to the original
 :c:`yastr` should be treated as invalid and should be replaced with the one
 returned by the function.
 
-This function may also return :c:`NULL` in case the :c:`realloc()` call failed,
-in which case the original :c:`yastr` references are still valid and should be
+This function may return :c:`NULL` in case the :c:`realloc()` call failed, in
+which case the original :c:`yastr` references are still valid and should be
 used.
 
+If the :c:`t` argument to the :c:`yaslcpy()` function is a NULL pointer, no
+operation is performed and the function will return NULL.
 
 yasljoin
 ~~~~~~~~
@@ -225,6 +236,9 @@ yasljoin
 The :c:`yasljoin()` function joins an array of C strings using the specified
  C string separator, and returns the resulting string as a :c:`yastr`.
 
+If the :c:`argv` or :c:`sep` arguments to the :c:`yasljoin()` function are
+NULL pointers, no operation is performed and the function will return NULL.
+
 yasljoinyasl
 ~~~~~~~~~~~~
 
@@ -235,6 +249,9 @@ yasljoinyasl
 The :c:`yasljoinyasl()` function join an array of :c:`yastr` using the
 specified C string separator, and returns the resulting string as a new
 :c:`yastr`.
+
+If the :c:`sep` argument to the :c:`yasljoinyasl()` function is a NULL pointer,
+no operation is performed and the function will return NULL.
 
 yaslmapchars
 ~~~~~~~~~~~~
@@ -250,6 +267,9 @@ characters in the :c:`from` C string to the corresponding character in the
 Since this function just maps one set of characters to another set of
 characters it will never change the length of the string, so the existing
 references to the string will continue being valid.
+
+If the :c:`from` or :c:`to` arguments to the :c:`yaslmapchars()` function are
+NULL pointers, no operation is performed and the function will return NULL.
 
 yaslrange
 ~~~~~~~~~
@@ -284,7 +304,6 @@ yasltoupper
 The :c:`yasltoupper()` function takes a :c:`yastr` and runs the :c:`touppeupper()`
 function on each char of the string.
 
-
 yasltrim
 ~~~~~~~~
 
@@ -298,6 +317,9 @@ given :c:`yastr`, and returns a new :c:`yastr` without them.
 
 This function destructively modifies the string and all references to the old
 string will be invalid and should be updated to the returned one.
+
+If the :c:`cset` argument to the :c:`yasltrim()` function is a NULL pointer, no
+operation is performed and the function will return.
 
 yaslupdatelen
 ~~~~~~~~~~~~~
@@ -331,6 +353,9 @@ The opposite of this function is provided by the :c:`yaslcatrepr()` function.
 This function will return :c:`NULL` if the input contains unbalanced quoted or
 closed quotes followed by a non-space character.
 
+If the :c:`line` or :c:`argc` arguments to the :c:`yaslsplitargs()` function
+are NULL pointers, no operation is performed and the function will return NULL.
+
 yaslsplitlen
 ~~~~~~~~~~~~
 
@@ -347,6 +372,10 @@ and separators, so both can contain binary data.
 
 This function may return NULL on out of memory, or if a zero-length string or
 separator was given.
+
+If the :c:`s`, :c:`sep` or :c:`count` arguments to the :c:`yaslsplitlen()`
+function are NULL pointers, no operation is performed and the function will
+return NULL.
 
 Concatenation
 =============
@@ -369,6 +398,9 @@ The :c:`yaslcat()` function appends the given C string to the :c:`yastr s`
 This function may :c:`realloc()` the string so all references to the original
 :c:`yastr` should be treated as invalid and should be replaced with the one
 returned by the function.
+
+If the :c:`t` argument to the :c:`yaslcat()` function is a NULL pointer, no
+operation is performed and the function will return NULL.
 
 yaslcatyasl
 ~~~~~~~~~~~
@@ -401,6 +433,9 @@ This function may :c:`realloc()` the string so all references to the original
 :c:`yastr` should be treated as invalid and should be replaced with the one
 returned by this function.
 
+If the :c:`t` argument to the :c:`yaslcatlen()` function is a NULL pointer, no
+operation is performed and the function will return NULL.
+
 yaslcatrepr
 ~~~~~~~~~~~
 
@@ -415,6 +450,9 @@ turned into appropriate escape codes if existent, or a ``\x<hex>`` otherwise.
 This function may :c:`realloc()` the string so all references to the original
 :c:`yastr` should be treated as invalid and should be replaced with the one
 returned by this function.
+
+If the :c:`p` argument to the :c:`yaslcatrepr()` function is a NULL pointer, no
+operation is performed and the function will return NULL.
 
 yaslcatvprintf
 ~~~~~~~~~~~~~~
@@ -435,6 +473,8 @@ This function may :c:`realloc()` the string so all references to the original
 :c:`yastr` should be treated as invalid and should be replaced with the one
 returned by this function.
 
+If the :c:`fmt` argument to the :c:`yaslcatvprintf()` function is a NULL
+pointer, no operation is performed and the function will return NULL.
 
 yaslcatprintf
 ~~~~~~~~~~~~~
@@ -454,6 +494,9 @@ This function may :c:`realloc()` the string so all references to the original
 :c:`yastr` should be treated as invalid and should be replaced with the one
 returned by this function.
 
+If the :c:`fmt` argument to the :c:`yaslcatprintf()` function is a NULL
+pointer, no operation is performed and the function will return NULL.
+
 Freeing
 =======
 
@@ -467,8 +510,6 @@ yaslfree
     void yaslfree(yastr s)
 
 The :c:`yaslfree()` function frees a yasl string.
-
-If the :c:`s` argument is NULL no operation is performed.
 
 yaslfreesplitres
 ~~~~~~~~~~~~~~~~
@@ -496,6 +537,7 @@ yaslAllocSize
 
 The :c:`yaslAllocSize()` function returns the total allocated size of the
 specified yasl string, including the :c:`yastrhdr` and the full string buffer.
+
 
 yaslIncrLen
 ~~~~~~~~~~~
@@ -539,4 +581,3 @@ next concatenation operation will require an reallocation.
 This function will :c:`realloc()` the string so all references to the original
 :c:`yastr` should be treated as invalid and should be replaced with the one
 returned by this function.
-
