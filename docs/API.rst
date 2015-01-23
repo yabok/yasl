@@ -304,7 +304,7 @@ yaslupdatelen
 
 .. code:: c
 
-    :oid yaslupdatelen(yastr s)
+    void yaslupdatelen(yastr s)
 
 The :c:`yaslupdatelen()` updates the :c:`len` of the string to the value
 returned by :c:`strlen()`. This function is useful when the :c:`yastr` has been
