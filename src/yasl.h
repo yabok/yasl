@@ -166,6 +166,8 @@ hex_digit_to_int(char c);
  */
 
 static inline struct yastrhdr *yaslheader(const yastr s) {
+	if (!s) { return NULL; }
+
 	/* The yastrhdr pointer has a different alignment than the original char
 	 * pointer, so cast it through a void pointer to silence the warning. */
 	return (void *)(s - (sizeof (struct yastrhdr)));
@@ -176,10 +178,14 @@ static inline yastr yaslauto(const char * s) {
 }
 
 static inline size_t yaslavail(const yastr s) {
+	if (!s) { return 0; }
+
 	return yaslheader(s)->free;
 }
 
 static inline size_t yasllen(const yastr s) {
+	if (!s) { return 0; }
+
 	return yaslheader(s)->len;
 }
 
