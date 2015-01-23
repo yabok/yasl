@@ -538,6 +538,15 @@ yaslAllocSize
 The :c:`yaslAllocSize()` function returns the total allocated size of the
 specified yasl string, including the :c:`yastrhdr` and the full string buffer.
 
+yaslheader
+~~~~~~~~~~
+
+.. code:: c
+
+    struct yastrhdr * yaslheader(const yastr s)
+
+The :c:`yaslheader()` function returns a pointer to the :c:`yastrhdr` of a
+given :c:`yastr` string.
 
 yaslIncrLen
 ~~~~~~~~~~~
