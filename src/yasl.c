@@ -718,9 +718,9 @@ yaslcatprintf(yastr s, const char * fmt, ...) {
 /* Free a yasl string. No operation is performed if 's' is NULL. */
 void
 yaslfree(yastr s) {
-	if (!s) { return; }
-
-	free(yaslheader(s));
+	if (s) {
+		free(yaslheader(s));
+	}
 }
 
 /* Free the result returned by yaslsplitlen(), or do nothing if 'tokens' is NULL. */
