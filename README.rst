@@ -26,9 +26,16 @@ Usage
 To use yasl copy the contents of the :literal:`src` directory into your sources
 and include the :literal:`yasl.h` header into the files which need to use yasl.
 
-The new API documentation isn’t finished yet, but a copy of the old SDS README
-is available in :literal:`docs/README.md.sds`, and reading the yasl header and
-test suite will provide a foundation for how to use it.
+Documentation
+=============
+
+The new API documentation for yasl can either be found in ``docs/API.rst``, or
+a built HTML version `here <http://yasl.readthedocs.org/en/latest/>`_. The API
+documentation is very new and might not be as accurate as it should and also
+does not yet have small code examples, though this is a planned addition.
+
+For code examples the best sources right now is the tests in ``test/tests.c``
+and in the old SDS README which can be found in ``docs/README.md.sds``.
 
 License
 =======
