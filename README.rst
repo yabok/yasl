@@ -11,7 +11,7 @@
 
 .. |RDT| image:: https://readthedocs.org/projects/yasl/badge/?version=latest
    :alt: Read-The-Docs Status
-   :target: :target: https://readthedocs.org/projects/yasl/?badge=latest
+   :target: https://readthedocs.org/projects/yasl/?badge=latest
 ----------------------------------
  Yet Another String Library for C
 ----------------------------------
