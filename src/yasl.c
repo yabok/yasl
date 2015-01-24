@@ -76,17 +76,7 @@ yaslfromlonglong(long long value) {
 
 // Querying //
 
-/* Compare two yasl strings s1 and s2 with memcmp().
- *
- * Return value:
- *
- *     1 if s1 > s2.
- *    -1 if s1 < s2.
- *     0 if s1 and s2 are exactly the same binary string.
- *
- * If two strings share exactly the same prefix, but one of the two has
- * additional characters, the longer string is considered to be greater than
- * the smaller one. */
+/* Compare two yasl strings s1 and s2 with memcmp(). */
 int
 yaslcmp(const yastr s1, const yastr s2) {
 	size_t l1, l2, minlen;

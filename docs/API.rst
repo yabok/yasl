@@ -123,7 +123,7 @@ yaslcmp
     int yaslcmp(const yastr s1, const yastr s2)
 
 The :c:`yaslcmp()` function takes two :c:`yastr`'s and compares them using
-:c:`memcmp()`. Its return values is lesser than, equal to, or greater than zero
+:c:`memcmp()`. Its return value is lesser than, equal to, or greater than zero
 if the first string is lesser than, equal to, or greater than the second
 string.
 
