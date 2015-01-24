@@ -46,7 +46,7 @@ The initialization group contains the functions used to create new :c:`yastr`
 strings.
 
 yaslnew
-~~~~~~~
+-------
 
 .. code:: c
 
@@ -57,7 +57,7 @@ using the contents of the :c:`init` argument to initialize the string with.
 
 
 yaslauto
-~~~~~~~~
+--------
 
 .. code:: c
 
@@ -70,7 +70,7 @@ zero.
 
 
 yasldup
-~~~~~~~
+-------
 
 .. code:: c
 
@@ -80,7 +80,7 @@ The :c:`yasldup()` functions takes a :c:`yastr` and creates and returns a new
 :c:`yastr` using the given string as an initializing value.
 
 yaslempty
-~~~~~~~~~
+---------
 
 .. code:: c
 
@@ -88,9 +88,8 @@ yaslempty
 
 The :c:`yaslempty()` function creates and returns an empty :c:`yastr`
 
-
 yaslfromlonglong
-~~~~~~~~~~~~~~~~
+----------------
 
 .. code:: c
 
@@ -105,7 +104,7 @@ Querying
 ========
 
 yaslcmp
-~~~~~~~
+-------
 
 .. code:: c
 
@@ -121,7 +120,7 @@ characters at the end, the longer string is considered to be greater than the
 shorter one.
 
 yaslavail
-~~~~~~~~~
+---------
 
 .. code:: c
 
@@ -134,7 +133,7 @@ value of the :c:`avail` member of the :c:`yastrhdr` struct, which is updated
 every time the :c:`yastr` is modified.
 
 yasllen
-~~~~~~~
+-------
 
 .. code:: c
 
@@ -152,7 +151,7 @@ This group contains all the functions used for modification of :c:`yastr`
 strings, with the exception of the concatenation functions in the next group.
 
 yaslclear
-~~~~~~~~~
+---------
 
 .. code:: c
 
@@ -165,7 +164,7 @@ fast, but it will also not suffice if you need the string to be reset to all
 :c:`NULL` bytes.
 
 yaslgrowzero
-~~~~~~~~~~~~
+------------
 
 .. code:: c
 
@@ -183,7 +182,7 @@ This function may :c:`realloc()` the string so all references to the original
 returned by this function.
 
 yaslcpylen
-~~~~~~~~~~
+----------
 
 .. code:: c
 
@@ -204,7 +203,7 @@ If the :c:`t` argument to the :c:`yaslcpylen()` function is a NULL pointer, no
 operation is performed and the function will return NULL.
 
 yaslcpy
-~~~~~~~
+-------
 
 .. code:: c
 
@@ -227,7 +226,7 @@ If the :c:`t` argument to the :c:`yaslcpy()` function is a NULL pointer, no
 operation is performed and the function will return NULL.
 
 yasljoin
-~~~~~~~~
+--------
 
 .. code:: c
 
@@ -240,7 +239,7 @@ If the :c:`argv` or :c:`sep` arguments to the :c:`yasljoin()` function are
 NULL pointers, no operation is performed and the function will return NULL.
 
 yasljoinyasl
-~~~~~~~~~~~~
+------------
 
 .. code:: c
 
@@ -254,7 +253,7 @@ If the :c:`sep` argument to the :c:`yasljoinyasl()` function is a NULL pointer,
 no operation is performed and the function will return NULL.
 
 yaslmapchars
-~~~~~~~~~~~~
+------------
 
 .. code:: c
 
@@ -272,7 +271,7 @@ If the :c:`from` or :c:`to` arguments to the :c:`yaslmapchars()` function are
 NULL pointers, no operation is performed and the function will return NULL.
 
 yaslrange
-~~~~~~~~~
+---------
 
 .. code:: c
 
@@ -285,7 +284,7 @@ cetera. The given argument ranges are inclusive, so the start and end
 characters will be included in the resulting string.
 
 yasltolower
-~~~~~~~~~~~
+-----------
 
 .. code:: c
 
@@ -295,7 +294,7 @@ The :c:`yasltolower()` function takes a :c:`yastr` and runs the :c:`tolower()`
 function on each char of the string.
 
 yasltoupper
-~~~~~~~~~~~
+-----------
 
 .. code:: c
 
@@ -305,7 +304,7 @@ The :c:`yasltoupper()` function takes a :c:`yastr` and runs the :c:`touppeupper(
 function on each char of the string.
 
 yasltrim
-~~~~~~~~
+--------
 
 .. code:: c
 
@@ -322,7 +321,7 @@ If the :c:`cset` argument to the :c:`yasltrim()` function is a NULL pointer, no
 operation is performed and the function will return.
 
 yaslupdatelen
-~~~~~~~~~~~~~
+-------------
 
 .. code:: c
 
@@ -335,7 +334,7 @@ on C strings it will not work properly on strings containing :c:`NULL`
 characters.
 
 yaslsplitargs
-~~~~~~~~~~~~~
+-------------
 
 .. code:: c
 
@@ -357,7 +356,7 @@ If the :c:`line` or :c:`argc` arguments to the :c:`yaslsplitargs()` function
 are NULL pointers, no operation is performed and the function will return NULL.
 
 yaslsplitlen
-~~~~~~~~~~~~
+------------
 
 .. code:: c
 
@@ -387,7 +386,7 @@ The functions in this section technically belongs to the modification group,
 but it was split out into its own group due to the large amount of functions.
 
 yaslcat
-~~~~~~~
+-------
 
 .. code:: c
 
@@ -403,7 +402,7 @@ If the :c:`t` argument to the :c:`yaslcat()` function is a NULL pointer, no
 operation is performed and the function will return NULL.
 
 yaslcatyasl
-~~~~~~~~~~~
+-----------
 
 .. code:: c
 
@@ -417,7 +416,7 @@ This function may :c:`realloc()` the string so all references to the original
 returned by the function.
 
 yaslcatlen
-~~~~~~~~~~
+----------
 
 .. code:: c
 
@@ -437,7 +436,7 @@ If the :c:`t` argument to the :c:`yaslcatlen()` function is a NULL pointer, no
 operation is performed and the function will return NULL.
 
 yaslcatrepr
-~~~~~~~~~~~
+-----------
 
 .. code:: c
 
@@ -455,7 +454,7 @@ If the :c:`p` argument to the :c:`yaslcatrepr()` function is a NULL pointer, no
 operation is performed and the function will return NULL.
 
 yaslcatvprintf
-~~~~~~~~~~~~~~
+--------------
 
 .. code:: c
 
@@ -477,7 +476,7 @@ If the :c:`fmt` argument to the :c:`yaslcatvprintf()` function is a NULL
 pointer, no operation is performed and the function will return NULL.
 
 yaslcatprintf
-~~~~~~~~~~~~~
+-------------
 
 .. code:: c
 
@@ -503,7 +502,7 @@ Freeing
 This group contains the functions used to free :c:`yastr` strings.
 
 yaslfree
-~~~~~~~~
+--------
 
 .. code:: c
 
@@ -512,7 +511,7 @@ yaslfree
 The :c:`yaslfree()` function frees a yasl string.
 
 yaslfreesplitres
-~~~~~~~~~~~~~~~~
+----------------
 
 .. code:: c
 
@@ -529,7 +528,7 @@ This group contains the functions in the low-level API and should generally not
 be used in client code.
 
 yaslAllocSize
-~~~~~~~~~~~~~
+-------------
 
 .. code:: c
 
@@ -539,7 +538,7 @@ The :c:`yaslAllocSize()` function returns the total allocated size of the
 specified yasl string, including the :c:`yastrhdr` and the full string buffer.
 
 yaslheader
-~~~~~~~~~~
+----------
 
 .. code:: c
 
@@ -549,7 +548,7 @@ The :c:`yaslheader()` function returns a pointer to the :c:`yastrhdr` of a
 given :c:`yastr` string.
 
 yaslIncrLen
-~~~~~~~~~~~
+-----------
 
 .. code:: c
 
@@ -563,7 +562,7 @@ This function is used to fix the string length after calling
 :c:`yaslMakeRoomFor` and then writing something to the end of the string.
 
 yaslMakeRoomFor
-~~~~~~~~~~~~~~~
+---------------
 
 .. code:: c
 
@@ -577,7 +576,7 @@ This function does not update the len member of the string returned by
 :c:`yasllen()`
 
 yaslRemoveFreeSpace
-~~~~~~~~~~~~~~~~~~~
+-------------------
 
 .. code:: c
 
