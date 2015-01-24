@@ -1,17 +1,15 @@
 ===========================
- yasl |travis| |cov| |RDT|
+ yasl |travis| |RDT| |cov|
 ===========================
 .. |travis| image:: https://travis-ci.org/yabok/yasl.svg
    :alt: Travis Build Status
    :target: https://travis-ci.org/yabok/yasl
-
-.. |cov| image:: https://scan.coverity.com/projects/3997/badge.svg
-   :alt: Coverity Scan Status
-   :target: https://scan.coverity.com/projects/3997
-
 .. |RDT| image:: https://readthedocs.org/projects/yasl/badge/?version=latest
    :alt: Read-The-Docs Status
    :target: https://readthedocs.org/projects/yasl/?badge=latest
+.. |cov| image:: https://scan.coverity.com/projects/3997/badge.svg
+   :alt: Coverity Scan Status
+   :target: https://scan.coverity.com/projects/3997
 ----------------------------------
  Yet Another String Library for C
 ----------------------------------
