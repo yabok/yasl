@@ -39,6 +39,11 @@ internal functions in yasl can use pointer arithmetic to get a pointer to the
 :c:`yastrhdr` of a given :c:`yastr` string, which is why all functions in yasl
 only requires a :c:`yastr` instead of a :c:`yastrhdr`
 
+All :c:`yastr` strings have a NULL byte at the end of the string, located at
+the byte after the full length of the string, so a :c:`yastr` will always be
+safe to pass to functions expecting C strings. However, since :c:`yastr`
+strings are binary-safe the string may contain NULL characters in it.
+
 Initialization
 ==============
 
