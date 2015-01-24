@@ -55,6 +55,10 @@ yaslnew
 The :c:`yaslnew()` function allocates a new :c:`yastr` of size :c:`initlen` and
 using the contents of the :c:`init` argument to initialize the string with.
 
+If the :c:`init` argument is a NULL pointer the string will be initialized with
+:c:`initlen` NULL bytes
+
+This function may return :c:`NULL` if the :c:`malloc()` call failed.
 
 yaslauto
 --------
@@ -87,6 +91,9 @@ yaslempty
     yastr yaslempty(void)
 
 The :c:`yaslempty()` function creates and returns an empty :c:`yastr`
+
+While the available length of the string is 0 there is still a NULL byte at the
+end of every :c:`yastr` string.
 
 yaslfromlonglong
 ----------------
@@ -270,6 +277,14 @@ references to the string will continue being valid.
 If the :c:`from` or :c:`to` arguments to the :c:`yaslmapchars()` function are
 NULL pointers, no operation is performed and the function will return NULL.
 
+Examples
+~~~~~~~~
+
+.. code:: c
+
+   yastr string = yaslauto("hello");
+   yaslmapchars(string, "ho", "01", 2);
+
 yaslrange
 ---------
 
@@ -282,6 +297,19 @@ contain the substring marked by the given start and end arguments. The start
 and end arguments may be negative, where ``-1`` means the last character, et
 cetera. The given argument ranges are inclusive, so the start and end
 characters will be included in the resulting string.
+
+The string is modified in-place, so no allocation is required.
+
+Examples
+~~~~~~~~
+
+.. code:: c
+
+   yastr string = yaslauto("Hello, World");
+   yaslrange(string, 1, -1);
+   printf("%s\n", string);
+
+Will print ``ello, World``
 
 yasltolower
 -----------
@@ -312,13 +340,21 @@ yasltrim
 
 The :c:`yasltrim()` function will trim the characters composed of just the
 characters found in the :c:`cset` C string from the beginning and end of the
-given :c:`yastr`, and returns a new :c:`yastr` without them.
-
-This function destructively modifies the string and all references to the old
-string will be invalid and should be updated to the returned one.
+given :c:`yastr`.
 
 If the :c:`cset` argument to the :c:`yasltrim()` function is a NULL pointer, no
 operation is performed and the function will return.
+
+Examples
+~~~~~~~~
+
+.. code:: c
+
+   yastr string = yaslauto("AA...AA.a.aa.aHelloWorld     :::");
+   yasltrim(string, "Aa. :");
+   printf("%s\n", string);
+
+Will print ``HelloWorld``
 
 yaslupdatelen
 -------------
@@ -333,6 +369,20 @@ modified by a function not aware of yasl strings, but since :c:`strlen()` works
 on C strings it will not work properly on strings containing :c:`NULL`
 characters.
 
+Examples
+~~~~~~~~
+
+.. code:: c
+
+   yastr string = yaslauto("foobar");
+   string[2] = '\0';
+   yaslupdatelen(string);
+   printf("%d\n", yasllen(string));
+
+The output will be "2", but if we comment out the call to yaslupdatelen() the
+output will be "6" as the string was modified but the logical length remains 6
+bytes.
+
 yaslsplitargs
 -------------
 
@@ -342,12 +392,14 @@ yaslsplitargs
 
 The :c:`yaslsplitargs()` function splits a C string into an array of :c:`yastr`
 strings in the same way a shell would. The :c:`argc` pointer is set to the
-number of members in the :c:`yastr` array.
+number of arguments in the :c:`yastr` array returned.
 
 The caller should free the resulting array of :c:`yastr` strings using the
 :c:`yaslfreesplitres()` function.
 
-The opposite of this function is provided by the :c:`yaslcatrepr()` function.
+To revert the operations of this functions and convert a string back into a
+quoted string that :c:`yaslsplitargs()` is able to parse you can use the
+:c:`yaslcatrepr()` function.
 
 This function will return :c:`NULL` if the input contains unbalanced quoted or
 closed quotes followed by a non-space character.
@@ -363,8 +415,8 @@ yaslsplitlen
     yastr * yaslsplitlen(const char * s, size_t len, const char * sep, size_t seplen, size_t * count)
 
 The :c:`yaslsplitlen()` function splits the given C string using the :c:`sep` C
-string as the separator. The :c:`count` pointer is set to the number of members
-in the array of :c:`yastr` strings that is returned.
+string as the separator into an array of :c:`yastr` strings. The :c:`count`
+pointer is set to the number of arguments in the :c:`yastr` array returned
 
 This function is binary safe, which is why it requires the length of the string
 and separators, so both can contain binary data.
@@ -496,6 +548,18 @@ returned by this function.
 If the :c:`fmt` argument to the :c:`yaslcatprintf()` function is a NULL
 pointer, no operation is performed and the function will return NULL.
 
+Examples
+~~~~~~~~
+
+.. code:: c
+
+   int a = 2, b = 2;
+   yastr string = yaslauto("Sum is: ");
+   string = yaslcatprintf(string, "%d + %d = %d", a, b, a + b);
+   printf("%s\n", string);
+
+Will print ``Sum is: 2 + 2 = 4``
+
 Freeing
 =======
 
@@ -561,6 +625,17 @@ in :c:`incr`, and also sets the new end of the string to :c:`NULL`.
 This function is used to fix the string length after calling
 :c:`yaslMakeRoomFor` and then writing something to the end of the string.
 
+Examples
+~~~~~~~~
+
+.. code:: c
+
+   size_t oldlen = yasllen(string);
+   string = yaslMakeRoomFor(string, BUFFER_SIZE);
+   nread = read(fd, string + oldlen, BUFFER_SIZE);
+   // ... check for nread <= 0 and handle it ...
+   yaslIncrLen(string, nread);
+
 yaslMakeRoomFor
 ---------------
 
@@ -573,7 +648,8 @@ given :c:`yastr` string so that the caller is sure that there is at least
 :c:`addlen` bytes of space available at the end of the string.
 
 This function does not update the len member of the string returned by
-:c:`yasllen()`
+:c:`yasllen()` since it doesn't change the length of the string, just the space
+available.
 
 yaslRemoveFreeSpace
 -------------------
