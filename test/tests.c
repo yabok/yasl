@@ -2,60 +2,60 @@
 
 #include "twbctf.h"
 
-bool check_string_length         (void);
-bool create_with_length          (void);
-bool string_concat               (void);
-bool yaslcpy_against_longer_str  (void);
-bool yaslcpy_against_shorter_str (void);
-bool yaslcatprintf_base_case     (void);
-bool yasltrim_trims_correctly    (void);
-bool yaslrange_one_one           (void);
-bool yaslrange_one_none          (void);
-bool yaslrange_ntwo_none         (void);
-bool yaslrange_two_one           (void);
-bool yaslrange_one_hund          (void);
-bool yaslrange_hund_hund         (void);
-bool yaslcmp_foo_foa             (void);
-bool yaslcmp_aar_bar             (void);
-bool yaslcmp_bar_bar             (void);
+bool check_string_length             (void);
+bool create_with_length              (void);
+bool string_concat                   (void);
+bool yaslcpy_against_longer_str      (void);
+bool yaslcpy_against_shorter_str     (void);
+bool yaslcatprintf_base_case         (void);
+bool yasltrim_trims_correctly        (void);
+bool yaslrange_one_one               (void);
+bool yaslrange_one_none              (void);
+bool yaslrange_ntwo_none             (void);
+bool yaslrange_two_one               (void);
+bool yaslrange_one_hund              (void);
+bool yaslrange_hund_hund             (void);
+bool yaslcmp_foo_foa                 (void);
+bool yaslcmp_aar_bar                 (void);
+bool yaslcmp_bar_bar                 (void);
 bool yaslcmp_same_prefix_long_first  (void);
 bool yaslcmp_same_prefix_long_second (void);
-bool yaslcatrepr_test            (void);
-bool yaslnew_check_free_len      (void);
-bool yaslMakeRoomFor_test        (void);
-bool yaslIncrLen_content         (void);
-bool yaslIncrLen_len             (void);
-bool yaslIncrLen_free            (void);
-bool test_yasltolower            (void);
-bool test_yasltoupper            (void);
+bool yaslcatrepr_test                (void);
+bool yaslnew_check_free_len          (void);
+bool yaslMakeRoomFor_test            (void);
+bool yaslIncrLen_content             (void);
+bool yaslIncrLen_len                 (void);
+bool yaslIncrLen_free                (void);
+bool test_yasltolower                (void);
+bool test_yasltoupper                (void);
 
 const struct test test_list [] = {
-	{ "create a string and obtain the length", check_string_length         },
-	{ "create a string with specified length", create_with_length          },
-	{ "string concatenation",                  string_concat               },
-	{ "yaslcpy() against a longer string",     yaslcpy_against_longer_str  },
-	{ "yaslcpy() against a shorter string",    yaslcpy_against_shorter_str },
-	{ "basic yaslcatprintf() usecase",         yaslcatprintf_base_case     },
-	{ "yasltrim() trims correctly",            yasltrim_trims_correctly    },
-	{ "yaslrange(..., 1, 1)",                  yaslrange_one_one           },
-	{ "yaslrange(..., 1, -1)",                 yaslrange_one_none          },
-	{ "yaslrange(..., -2, -1)",                yaslrange_ntwo_none         },
-	{ "yaslrange(..., 2, 1)",                  yaslrange_two_one           },
-	{ "yaslrange(..., 1, 100)",                yaslrange_one_hund          },
-	{ "yaslrange(..., 100, 100)",              yaslrange_hund_hund         },
-	{ "yaslcmp(foo, foa)",                     yaslcmp_foo_foa             },
-	{ "yaslcmp(aar, bar)",                     yaslcmp_aar_bar             },
-	{ "yaslcmp(bar, bar)",                     yaslcmp_bar_bar             },
+	{ "create a string and obtain the length",      check_string_length             },
+	{ "create a string with specified length",      create_with_length              },
+	{ "string concatenation",                       string_concat                   },
+	{ "yaslcpy() against a longer string",          yaslcpy_against_longer_str      },
+	{ "yaslcpy() against a shorter string",         yaslcpy_against_shorter_str     },
+	{ "basic yaslcatprintf() usecase",              yaslcatprintf_base_case         },
+	{ "yasltrim() trims correctly",                 yasltrim_trims_correctly        },
+	{ "yaslrange(..., 1, 1)",                       yaslrange_one_one               },
+	{ "yaslrange(..., 1, -1)",                      yaslrange_one_none              },
+	{ "yaslrange(..., -2, -1)",                     yaslrange_ntwo_none             },
+	{ "yaslrange(..., 2, 1)",                       yaslrange_two_one               },
+	{ "yaslrange(..., 1, 100)",                     yaslrange_one_hund              },
+	{ "yaslrange(..., 100, 100)",                   yaslrange_hund_hund             },
+	{ "yaslcmp(foo, foa)",                          yaslcmp_foo_foa                 },
+	{ "yaslcmp(aar, bar)",                          yaslcmp_aar_bar                 },
+	{ "yaslcmp(bar, bar)",                          yaslcmp_bar_bar                 },
 	{ "yaslcmp with identical prefix, long first",  yaslcmp_same_prefix_long_first  },
 	{ "yaslcmp with identical prefix, long second", yaslcmp_same_prefix_long_second },
-	{ "yaslcatrepr(...data...)",               yaslcatrepr_test            },
-	{ "yaslnew() free/len buffers",            yaslnew_check_free_len      },
-	{ "yaslMakeRoomFor()",                     yaslMakeRoomFor_test        },
-	{ "content after yaslIncrLen()",           yaslIncrLen_content         },
-	{ "len after yaslIncrLen()",               yaslIncrLen_len             },
-	{ "free after yaslIncrLen()",              yaslIncrLen_free            },
-	{ "yasltolower()",                         test_yasltolower            },
-	{ "yasltoupper()",                         test_yasltoupper            },
+	{ "yaslcatrepr(...data...)",                    yaslcatrepr_test                },
+	{ "yaslnew() free/len buffers",                 yaslnew_check_free_len          },
+	{ "yaslMakeRoomFor()",                          yaslMakeRoomFor_test            },
+	{ "content after yaslIncrLen()",                yaslIncrLen_content             },
+	{ "len after yaslIncrLen()",                    yaslIncrLen_len                 },
+	{ "free after yaslIncrLen()",                   yaslIncrLen_free                },
+	{ "yasltolower()",                              test_yasltolower                },
+	{ "yasltoupper()",                              test_yasltoupper                },
 };
 
 static inline void yaslfrees(yastr *string) { if (*string) yaslfree(*string); }
