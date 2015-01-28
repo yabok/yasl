@@ -18,6 +18,8 @@ bool yaslrange_hund_hund         (void);
 bool yaslcmp_foo_foa             (void);
 bool yaslcmp_aar_bar             (void);
 bool yaslcmp_bar_bar             (void);
+bool yaslcmp_same_prefix_long_first  (void);
+bool yaslcmp_same_prefix_long_second (void);
 bool yaslcatrepr_test            (void);
 bool yaslnew_check_free_len      (void);
 bool yaslMakeRoomFor_test        (void);
@@ -44,6 +46,8 @@ const struct test test_list [] = {
 	{ "yaslcmp(foo, foa)",                     yaslcmp_foo_foa             },
 	{ "yaslcmp(aar, bar)",                     yaslcmp_aar_bar             },
 	{ "yaslcmp(bar, bar)",                     yaslcmp_bar_bar             },
+	{ "yaslcmp with identical prefix, long first",  yaslcmp_same_prefix_long_first  },
+	{ "yaslcmp with identical prefix, long second", yaslcmp_same_prefix_long_second },
 	{ "yaslcatrepr(...data...)",               yaslcatrepr_test            },
 	{ "yaslnew() free/len buffers",            yaslnew_check_free_len      },
 	{ "yaslMakeRoomFor()",                     yaslMakeRoomFor_test        },
@@ -170,6 +174,20 @@ yaslcmp_bar_bar(void) {
 	_yastr_cleanup_ yastr x = yaslauto("bar");
 	_yastr_cleanup_ yastr y = yaslauto("bar");
 	return (yaslcmp(x, y) == 0);
+}
+
+bool
+yaslcmp_same_prefix_long_first(void) {
+	_yastr_cleanup_ yastr x = yaslauto("foobar");
+	_yastr_cleanup_ yastr y = yaslauto("foo");
+	return (yaslcmp(x, y) > 0);
+}
+
+bool
+yaslcmp_same_prefix_long_second(void) {
+	_yastr_cleanup_ yastr x = yaslauto("foo");
+	_yastr_cleanup_ yastr y = yaslauto("foobar");
+	return (yaslcmp(x, y) < 0);
 }
 
 bool
