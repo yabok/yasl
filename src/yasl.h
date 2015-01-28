@@ -66,10 +66,10 @@ yastr
 yaslgrowzero(yastr str, size_t len);
 
 yastr
-yaslcpylen(yastr str, const char * t, size_t len);
+yaslcpylen(yastr dest, const char * src, size_t len);
 
 yastr
-yaslcpy(yastr str, const char * t);
+yaslcpy(yastr dest, const char * src);
 
 yastr
 yasljoin(char ** argv, int argc, char * sep, size_t seplen);
@@ -104,16 +104,16 @@ yaslsplitlen(const char * str, size_t len, const char * sep, size_t seplen, size
 
 // Concatenation //
 yastr
-yaslcat(yastr str, const char * t);
+yaslcat(yastr dest, const char * src);
 
 yastr
-yaslcatyasl(yastr str, const yastr t);
+yaslcatyasl(yastr dest, const yastr src);
 
 yastr
-yaslcatlen(yastr str, const void * t, size_t len);
+yaslcatlen(yastr dest, const void * src, size_t len);
 
 yastr
-yaslcatrepr(yastr str, const char * p, size_t len);
+yaslcatrepr(yastr dest, const char * src, size_t len);
 
 yastr
 yaslcatvprintf(yastr str, const char * fmt, va_list ap);

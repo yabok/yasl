@@ -20,8 +20,7 @@
 // Initialization //
 
 /* Create a new yasl string, using `initlen` bytes from the `init` pointer to
- * initialize it with.
- */
+ * initialize it with. */
 yastr
 yaslnew(const void * init, size_t initlen) {
 	struct yastrhdr * hdr;
@@ -105,8 +104,7 @@ yaslclear(yastr str) {
 }
 
 /* Grow the yasl string to have the specified length. Bytes that were not part
- * of the original length of the yasl string will be set to zero.
- */
+ * of the original length of the yasl string will be set to zero. */
 yastr
 yaslgrowzero(yastr str, size_t len) {
 	if (!str) { return NULL; }
@@ -127,36 +125,35 @@ yaslgrowzero(yastr str, size_t len) {
 	return str;
 }
 
-/* Destructively modify the yasl string 's' to hold the specified binary
- * safe string pointed by 't' of length 'len' bytes.
- */
+/* Destructively modify the yasl string 'dest' to hold the specified binary
+ * safe string pointed by 'src' of length 'len' bytes. */
 yastr
-yaslcpylen(yastr str, const char * t, size_t len) {
-	if (!str || !t) { return NULL; }
+yaslcpylen(yastr dest, const char * src, size_t len) {
+	if (!dest || !src) { return NULL; }
 
-	struct yastrhdr * hdr = yaslheader(str);
+	struct yastrhdr * hdr = yaslheader(dest);
 	size_t totlen = hdr->free + hdr->len;
 
 	if (totlen < len) {
-		str = yaslMakeRoomFor(str, len - hdr->len);
-		if (!str) { return NULL; }
-		hdr = yaslheader(str);
+		dest = yaslMakeRoomFor(dest, len - hdr->len);
+		if (!dest) { return NULL; }
+		hdr = yaslheader(dest);
 		totlen = hdr->free + hdr->len;
 	}
-	memcpy(str, t, len);
-	str[len] = '\0';
+	memcpy(dest, src, len);
+	dest[len] = '\0';
 	hdr->len = len;
 	hdr->free = totlen - len;
-	return str;
+	return dest;
 }
 
-/* Like yaslcpylen() but 't' must be a null-termined string so that the length
- * of the string is obtained with strlen(). */
+/* Like yaslcpylen() but 'src' must be a null-termined string so that the
+ * length of the string is obtained with strlen(). */
 yastr
-yaslcpy(yastr str, const char * t) {
-	if (!str || !t) { return NULL; }
+yaslcpy(yastr dest, const char * src) {
+	if (!dest || !src) { return NULL; }
 
-	return yaslcpylen(str, t, strlen(t));
+	return yaslcpylen(dest, src, strlen(src));
 }
 
 /* Join an array of C strings using the specified separator (also a C string).
@@ -190,8 +187,7 @@ yasljoinyasl(yastr * argv, int argc, const char * sep, size_t seplen) {
 
 /* Modify the string substituting all the occurrences of the set of
  * characters specified in the 'from' string to the corresponding character
- * in the 'to' array.
- */
+ * in the 'to' array. */
 yastr
 yaslmapchars(yastr str, const char * from, const char * to, size_t setlen) {
 	if (!str || !from || !to) { return NULL; }
@@ -208,8 +204,7 @@ yaslmapchars(yastr str, const char * from, const char * to, size_t setlen) {
 }
 
 /* Turn the string into a smaller (or equal) string containing only the
- * substring specified by the 'start' and 'end' indexes.
- */
+ * substring specified by the 'start' and 'end' indexes. */
 void
 yaslrange(yastr str, ptrdiff_t start, ptrdiff_t end) {
 	if (!str) { return; }
@@ -264,8 +259,7 @@ yasltoupper(yastr str) {
 }
 
 /* Remove the part of the string from left and from right composed just of
- * contiguous characters found in 'cset', that is a null terminted C string.
- */
+ * contiguous characters found in 'cset', that is a null terminted C string. */
 void
 yasltrim(yastr str, const char * cset) {
 	if (!str || !cset) { return; }
@@ -477,73 +471,71 @@ cleanup:
 
 // Concatenation //
 
-/* Append the specified null termianted C string to the yasl string 's'. */
+/* Append the specified null termianted C string to the yasl string 'dest'. */
 yastr
-yaslcat(yastr str, const char * t) {
-	if (!str || !t) { return NULL; }
+yaslcat(yastr dest, const char * src) {
+	if (!dest || !src) { return NULL; }
 
-	return yaslcatlen(str, t, strlen(t));
+	return yaslcatlen(dest, src, strlen(src));
 }
 
-/* Append the specified yasl string 't' to the existing yasl string 's'. */
+/* Append the specified yasl string 'src' to the existing yasl string 'dest'. */
 yastr
-yaslcatyasl(yastr str, const yastr t) {
-	if (!str || !t) { return NULL; }
+yaslcatyasl(yastr dest, const yastr src) {
+	if (!dest || !src) { return NULL; }
 
-	return yaslcatlen(str, t, yasllen(t));
+	return yaslcatlen(dest, src, yasllen(src));
 }
 
-/* Append the specified binary-safe string pointed by 't' of 'len' bytes to the
- * end of the specified yasl string 's'.
- */
+/* Append the specified binary-safe string pointed by 'src' of 'len' bytes to the
+ * end of the specified yasl string 'dest'. */
 yastr
-yaslcatlen(yastr str, const void * t, size_t len) {
-	if (!str || !t) { return NULL; }
+yaslcatlen(yastr dest, const void * src, size_t len) {
+	if (!dest || !src) { return NULL; }
 
 	struct yastrhdr * hdr;
-	size_t curlen = yasllen(str);
+	size_t curlen = yasllen(dest);
 
-	str = yaslMakeRoomFor(str, len);
-	if (!str) { return NULL; }
-	hdr = yaslheader(str);
-	memcpy(str + curlen, t, len);
+	dest = yaslMakeRoomFor(dest, len);
+	if (!dest) { return NULL; }
+	hdr = yaslheader(dest);
+	memcpy(dest + curlen, src, len);
 	hdr->len = curlen + len;
 	hdr->free = hdr->free - len;
-	str[curlen + len] = '\0';
-	return str;
+	dest[curlen + len] = '\0';
+	return dest;
 }
 
-/* Append to the yasl string "s" an escaped string representation where
+/* Append to the yasl string "dest" an escaped string representation where
  * all the non-printable characters (tested with isprint()) are turned into
- * escapes in the form "\n\r\a...." or "\x<hex-number>".
- */
+ * escapes in the form "\n\r\a...." or "\x<hex-number>". */
 yastr
-yaslcatrepr(yastr str, const char * p, size_t len) {
-	if (!str || !p) { return NULL; }
+yaslcatrepr(yastr dest, const char * src, size_t len) {
+	if (!dest || !src) { return NULL; }
 
-	str = yaslcatlen(str, "\"", 1);
+	dest = yaslcatlen(dest, "\"", 1);
 	while(len--) {
-		switch(*p) {
+		switch(*src) {
 		case '\\':
 		case '"':
-			str = yaslcatprintf(str, "\\%c", *p);
+			dest = yaslcatprintf(dest, "\\%c", *src);
 			break;
-		case '\n': str = yaslcatlen(str, "\\n", 2); break;
-		case '\r': str = yaslcatlen(str, "\\r", 2); break;
-		case '\t': str = yaslcatlen(str, "\\t", 2); break;
-		case '\a': str = yaslcatlen(str, "\\a", 2); break;
-		case '\b': str = yaslcatlen(str, "\\b", 2); break;
+		case '\n': dest = yaslcatlen(dest, "\\n", 2); break;
+		case '\r': dest = yaslcatlen(dest, "\\r", 2); break;
+		case '\t': dest = yaslcatlen(dest, "\\t", 2); break;
+		case '\a': dest = yaslcatlen(dest, "\\a", 2); break;
+		case '\b': dest = yaslcatlen(dest, "\\b", 2); break;
 		default:
-			if (isprint(*p)) {
-				str = yaslcatprintf(str, "%c", *p);
+			if (isprint(*src)) {
+				dest = yaslcatprintf(dest, "%c", *src);
 			} else {
-				str = yaslcatprintf(str, "\\x%02x", (unsigned char)*p);
+				dest = yaslcatprintf(dest, "\\x%02x", (unsigned char)*src);
 				break;
 			}
 		}
-		p++;
+		src++;
 	}
-	return yaslcatlen(str, "\"", 1);
+	return yaslcatlen(dest, "\"", 1);
 }
 
 /* Like yaslcatpritf() but gets va_list instead of being variadic. */
@@ -576,9 +568,8 @@ yaslcatvprintf(yastr str, const char * fmt, va_list ap) {
 }
 #pragma GCC diagnostic warning "-Wformat-nonliteral"
 
-/* Append to the yasl string 's' a string obtained using printf-alike format
- * specifier.
- */
+/* Append to the yasl string 'str' a string obtained using printf-alike format
+ * specifier. */
 yastr
 yaslcatprintf(yastr str, const char * fmt, ...) {
 	if (!str || !fmt) { return NULL; }
@@ -634,8 +625,7 @@ yaslAllocSize(yastr str) {
 
 /* Increment the yasl string length and decrements the left free space at the
  * end of the string according to 'incr'. Also set the null term in the new end
- * of the string.
- */
+ * of the string. */
 void
 yaslIncrLen(yastr str, size_t incr) {
 	if (!str) { return; }
@@ -650,8 +640,7 @@ yaslIncrLen(yastr str, size_t incr) {
 
 /* Enlarge the free space at the end of the yasl string so that the caller
  * is sure that after calling this function can overwrite up to addlen
- * bytes after the end of the string, plus one more byte for nul term.
- */
+ * bytes after the end of the string, plus one more byte for nul term. */
 yastr
 yaslMakeRoomFor(yastr str, size_t addlen) {
 	if (!str) { return NULL; }
@@ -678,8 +667,7 @@ yaslMakeRoomFor(yastr str, size_t addlen) {
 
 /* Reallocate the yasl string so that it has no free space at the end. The
  * contained string remains not altered, but next concatenation operations
- * will require a reallocation.
- */
+ * will require a reallocation. */
 yastr
 yaslRemoveFreeSpace(yastr str) {
 	if (!str) { return NULL; }
@@ -699,16 +687,14 @@ yaslRemoveFreeSpace(yastr str) {
 // Low-level helper functions //
 
 /* Helper function for yaslsplitargs() that returns non zero if 'c'
- * is a valid hex digit.
- */
+ * is a valid hex digit. */
 int is_hex_digit(char c) {
 	return (c >= '0' && c <= '9') || (c >= 'a' && c <= 'f') ||
 	       (c >= 'A' && c <= 'F');
 }
 
 /* Helper function for yaslsplitargs() that converts a hex digit into an
- * integer from 0 to 15
- */
+ * integer from 0 to 15 */
 int hex_digit_to_int(char c) {
 	switch(c) {
 	case '0': return 0;
