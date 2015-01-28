@@ -35,10 +35,10 @@ yastr
 yaslnew(const void * init, size_t initlen);
 
 static inline yastr
-yaslauto(const char * s);
+yaslauto(const char * str);
 
 yastr
-yasldup(const yastr s);
+yasldup(const yastr str);
 
 yastr
 yaslempty(void);
@@ -49,27 +49,27 @@ yaslfromlonglong(long long value);
 
 // Querying //
 static inline size_t
-yaslavail(const yastr s);
+yaslavail(const yastr str);
 
 static inline size_t
-yasllen(const yastr s);
+yasllen(const yastr str);
 
 int
-yaslcmp(const yastr s1, const yastr s2);
+yaslcmp(const yastr str1, const yastr str2);
 
 
 // Modification //
 void
-yaslclear(yastr s);
+yaslclear(yastr str);
 
 yastr
-yaslgrowzero(yastr s, size_t len);
+yaslgrowzero(yastr str, size_t len);
 
 yastr
-yaslcpylen(yastr s, const char * t, size_t len);
+yaslcpylen(yastr str, const char * t, size_t len);
 
 yastr
-yaslcpy(yastr s, const char * t);
+yaslcpy(yastr str, const char * t);
 
 yastr
 yasljoin(char ** argv, int argc, char * sep, size_t seplen);
@@ -78,59 +78,59 @@ yastr
 yasljoinyasl(yastr * argv, int argc, const char * sep, size_t seplen);
 
 yastr
-yaslmapchars(yastr s, const char * from, const char * to, size_t setlen);
+yaslmapchars(yastr str, const char * from, const char * to, size_t setlen);
 
 void
-yaslrange(yastr s, ptrdiff_t start, ptrdiff_t end);
+yaslrange(yastr str, ptrdiff_t start, ptrdiff_t end);
 
 void
-yasltolower(yastr s);
+yasltolower(yastr str);
 
 void
-yasltoupper(yastr s);
+yasltoupper(yastr str);
 
 void
-yasltrim(yastr s, const char * cset);
+yasltrim(yastr str, const char * cset);
 
 void
-yaslupdatelen(yastr s);
+yaslupdatelen(yastr str);
 
 yastr *
 yaslsplitargs(const char * line, int * argc);
 
 yastr *
-yaslsplitlen(const char * s, size_t len, const char * sep, size_t seplen, size_t * count);
+yaslsplitlen(const char * str, size_t len, const char * sep, size_t seplen, size_t * count);
 
 
 // Concatenation //
 yastr
-yaslcat(yastr s, const char * t);
+yaslcat(yastr str, const char * t);
 
 yastr
-yaslcatyasl(yastr s, const yastr t);
+yaslcatyasl(yastr str, const yastr t);
 
 yastr
-yaslcatlen(yastr s, const void * t, size_t len);
+yaslcatlen(yastr str, const void * t, size_t len);
 
 yastr
-yaslcatrepr(yastr s, const char * p, size_t len);
+yaslcatrepr(yastr str, const char * p, size_t len);
 
 yastr
-yaslcatvprintf(yastr s, const char * fmt, va_list ap);
+yaslcatvprintf(yastr str, const char * fmt, va_list ap);
 
 #ifdef __GNUC__
 yastr
-yaslcatprintf(yastr s, const char * fmt, ...)
+yaslcatprintf(yastr str, const char * fmt, ...)
         __attribute__((format(printf, 2, 3)));
 #else
 yastr
-yaslcatprintf(yastr s, const char * fmt, ...);
+yaslcatprintf(yastr str, const char * fmt, ...);
 #endif
 
 
 // Freeing //
 void
-yaslfree(yastr s);
+yaslfree(yastr str);
 
 void
 yaslfreesplitres(yastr * tokens, size_t count);
@@ -138,19 +138,19 @@ yaslfreesplitres(yastr * tokens, size_t count);
 
 // Low-level functions //
 static inline struct yastrhdr *
-yaslheader(const yastr s);
+yaslheader(const yastr str);
 
 size_t
-yaslAllocSize(yastr s);
+yaslAllocSize(yastr str);
 
 void
-yaslIncrLen(yastr s, size_t incr);
+yaslIncrLen(yastr str, size_t incr);
 
 yastr
-yaslMakeRoomFor(yastr s, size_t addlen);
+yaslMakeRoomFor(yastr str, size_t addlen);
 
 yastr
-yaslRemoveFreeSpace(yastr s);
+yaslRemoveFreeSpace(yastr str);
 
 
 // Low-level helper functions //
@@ -165,28 +165,28 @@ hex_digit_to_int(char c);
  * Inline functions
  */
 
-static inline struct yastrhdr *yaslheader(const yastr s) {
-	if (!s) { return NULL; }
+static inline struct yastrhdr *yaslheader(const yastr str) {
+	if (!str) { return NULL; }
 
 	/* The yastrhdr pointer has a different alignment than the original char
 	 * pointer, so cast it through a void pointer to silence the warning. */
-	return (void *)(s - (sizeof (struct yastrhdr)));
+	return (void *)(str - (sizeof (struct yastrhdr)));
 }
 
-static inline yastr yaslauto(const char * s) {
-	return yaslnew(s, s ? strlen(s) : 0);
+static inline yastr yaslauto(const char * str) {
+	return yaslnew(str, str ? strlen(str) : 0);
 }
 
-static inline size_t yaslavail(const yastr s) {
-	if (!s) { return 0; }
+static inline size_t yaslavail(const yastr str) {
+	if (!str) { return 0; }
 
-	return yaslheader(s)->free;
+	return yaslheader(str)->free;
 }
 
-static inline size_t yasllen(const yastr s) {
-	if (!s) { return 0; }
+static inline size_t yasllen(const yastr str) {
+	if (!str) { return 0; }
 
-	return yaslheader(s)->len;
+	return yaslheader(str)->len;
 }
 
 
