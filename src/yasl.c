@@ -86,7 +86,7 @@ yaslcmp(const yastr s1, const yastr s2) {
 	l2 = yasllen(s2);
 	minlen = (l1 < l2) ? l1 : l2;
 	cmp = memcmp(s1, s2, minlen);
-	if (cmp == 0) { return (l1 < l2 ? -1 : l1 > l2); }
+	if (cmp == 0) { return (l1 > l2) - (l1 < l2); }
 	return cmp;
 }
 
