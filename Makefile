@@ -29,9 +29,9 @@ test: yasl-test
 	./yasl-test
 
 clean:
-	rm libyasl.so.*
-	rm -f yasl-test
-	rm docs/*.3
+	-rm -f libyasl.so.$(SOVER)
+	-rm -f yasl-test
+	-rm -f docs/*.3
 
 
 .PHONY: all test
