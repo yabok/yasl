@@ -18,6 +18,23 @@ yasl is a simple dynamic string library for the C programming language,
 targeting C99 and C11, and forked from the SDS library that was split out from
 Redis.
 
+Usage
+=====
+
+yasl is available to use both as a shared library and as an in-tree copy of the
+library. Since there is likely no yasl package for your distribution you likely
+will want to go with the second approach for now, but it would be appreciated
+if your project's build system also let you use a shared library version of
+yasl instead.
+
+To use yasl as an in-tree library copy the contents of the :literal:`src`
+directory into your project's source tree and include the :literal:`yasl.h`
+header into the files in which you want to use yasl.
+
+To use yasl as a shared library to link against just include the
+:literal:`yasl.h` header in the files in which you want to use yasl, and then
+link you program against :literal:`libyasl`.
+
 Testing
 =======
 
@@ -28,12 +45,6 @@ To compile and run the test suite, run the following command::
     make test
 
 .. _twbctf: https://github.com/HalosGhost/twbctf
-
-Usage
-=====
-
-To use yasl copy the contents of the :literal:`src` directory into your sources
-and include the :literal:`yasl.h` header into the files which need to use yasl.
 
 Documentation
 =============
