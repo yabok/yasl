@@ -57,6 +57,23 @@ does not yet have small code examples, though this is a planned addition.
 For code examples the best sources right now is the tests in ``test/tests.c``
 and in the old SDS README which can be found in ``docs/README.md.sds``.
 
+Contributing
+============
+
+1. Check for `open issues`_ or open a `new issue`_ to start a discussion around
+   a feature idea or a bug.
+
+2. Fork `the repository on GitHub <https://github.com/yabok/yasl>`_ to start
+   making your changes.
+
+3. Write one or more tests which shows that the bug was fixed or that the
+   feature works as expected.
+
+4. Send a pull request and bug the maintainers until it gets merged.
+
+.. _`open issues`: https://github.com/yabok/yasl/issues
+.. _`new issue`: https://github.com/yabok/yasl/issues/new
+
 License
 =======
 
