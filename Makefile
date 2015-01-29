@@ -33,5 +33,11 @@ clean:
 	-rm -f yasl-test
 	-rm -f docs/*.3
 
+install: libyasl.so.$(SOVER)
+	@echo "==> Installing libyasl to $(DESTDIR)$(PREFIX)"
+	install -Dm644 libyasl.so.$(SOVER) "$(DESTDIR)$(PREFIX)/lib/libyasl.so.$(SOVER)"
+	install -Dm644 src/yasl.h "$(DESTDIR)$(PREFIX)/include/yasl.h"
+	ln -s libyasl.so.$(SOVER) "$(DESTDIR)$(PREFIX)/lib/libyasl.so"
+	ln -s libyasl.so.$(SOVER) "$(DESTDIR)$(PREFIX)/lib/libyasl.so.0"
 
-.PHONY: all test
+.PHONY: all test clean install
