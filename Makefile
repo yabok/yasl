@@ -2,7 +2,7 @@ CC = clang
 SOVER = 0.0.0
 
 CFLAGS += -Isrc -O2 -std=c99 -ggdb -fstack-protector-all -Wl,-z,relro -Wl,-z,now
-CFLAGS += -Weverything -Wno-disabled-macro-expansion
+CFLAGS += -Werror -Weverything -Wno-disabled-macro-expansion
 SOCFLAGS += $(CFLAGS) -fPIC -shared -Wl,-soname,libyasl.so.0
 TESTCFLAGS += $(CFLAGS) -fPIE -pie -Wno-vla -Wno-cast-align
 
