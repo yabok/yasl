@@ -26,8 +26,8 @@ bool yaslMakeRoomFor_test            (void);
 bool yaslIncrLen_content             (void);
 bool yaslIncrLen_len                 (void);
 bool yaslIncrLen_free                (void);
-bool test_yasltolower                (void);
-bool test_yasltoupper                (void);
+bool yasltolower_ascii_digits        (void);
+bool yasltoupper_ascii_digits        (void);
 
 const struct test test_list [] = {
 	{ "create a string and obtain the length",      check_string_length             },
@@ -54,8 +54,8 @@ const struct test test_list [] = {
 	{ "content after yaslIncrLen()",                yaslIncrLen_content             },
 	{ "len after yaslIncrLen()",                    yaslIncrLen_len                 },
 	{ "free after yaslIncrLen()",                   yaslIncrLen_free                },
-	{ "yasltolower()",                              test_yasltolower                },
-	{ "yasltoupper()",                              test_yasltoupper                },
+	{ "yasltolower() with ASCII and digits",        yasltolower_ascii_digits        },
+	{ "yasltoupper() with ASCII and digits",        yasltoupper_ascii_digits        },
 };
 
 static inline void yaslfrees(yastr *string) { if (*string) yaslfree(*string); }
@@ -243,14 +243,14 @@ yaslIncrLen_free(void) {
 }
 
 bool
-test_yasltolower(void) {
+yasltolower_ascii_digits(void) {
 	_yastr_cleanup_ yastr x = yaslauto("0FoO1bar\n");
 	yasltolower(x);
 	return memcmp(x, "0foo1bar\n\0", 10) == 0;
 }
 
 bool
-test_yasltoupper(void) {
+yasltoupper_ascii_digits(void) {
 	_yastr_cleanup_ yastr x = yaslauto("0FoO1bar\n");
 	yasltoupper(x);
 	return memcmp(x, "0FOO1BAR\n\0", 10) == 0;
