@@ -10,6 +10,11 @@
 #ifndef YASL_H
 #define YASL_H
 
+#ifndef __GNUC__
+	#undef __attribute__
+	#define __attribute__(x) /* nothing */
+#endif
+
 #define YASL_MAX_PREALLOC (1024*1024)
 
 #include <stdarg.h>
@@ -118,14 +123,9 @@ yaslcatrepr(yastr dest, const char * src, size_t len);
 yastr
 yaslcatvprintf(yastr str, const char * fmt, va_list ap);
 
-#ifdef __GNUC__
 yastr
 yaslcatprintf(yastr str, const char * fmt, ...)
         __attribute__((format(printf, 2, 3)));
-#else
-yastr
-yaslcatprintf(yastr str, const char * fmt, ...);
-#endif
 
 
 // Freeing //
@@ -147,10 +147,12 @@ void
 yaslIncrLen(yastr str, size_t incr);
 
 yastr
-yaslMakeRoomFor(yastr str, size_t addlen);
+yaslMakeRoomFor(yastr str, size_t addlen)
+        __attribute__((warn_unused_result));
 
 yastr
-yaslRemoveFreeSpace(yastr str);
+yaslRemoveFreeSpace(yastr str)
+        __attribute__((warn_unused_result));
 
 
 // Low-level helper functions //
