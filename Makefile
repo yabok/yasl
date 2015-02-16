@@ -32,7 +32,7 @@ test: yasl-test
 clean:
 	-rm -f libyasl.so.$(SOVER)
 	-rm -f yasl-test
-	-rm -f docs/*.3
+	-rm -rf docs/*.3 docs/.doctrees/
 
 install: libyasl.so.$(SOVER)
 	@echo "==> Installing libyasl to $(DESTDIR)$(PREFIX)"
