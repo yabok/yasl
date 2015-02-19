@@ -172,7 +172,7 @@ static inline struct yastrhdr *yaslheader(const yastr str) {
 
 	/* The yastrhdr pointer has a different alignment than the original char
 	 * pointer, so cast it through a void pointer to silence the warning. */
-	return (void *)(str - (sizeof (struct yastrhdr)));
+	return (void *)(str - offsetof(struct yastrhdr, buf));
 }
 
 static inline yastr yaslauto(const char * str) {
