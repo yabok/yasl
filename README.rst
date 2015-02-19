@@ -27,13 +27,18 @@ will want to go with the second approach for now, but it would be appreciated
 if your project's build system also let you use a shared library version of
 yasl instead.
 
-To use yasl as an in-tree library copy the contents of the :literal:`src`
+To use an in-tree copy of libyasl, copy the contents of the :literal:`src`
 directory into your project's source tree and include the :literal:`yasl.h`
-header into the files in which you want to use yasl.
+header into the files in which you want to use yasl, and compile
+:literal:`yasl.c` into your program.
 
-To use yasl as a shared library to link against just include the
-:literal:`yasl.h` header in the files in which you want to use yasl, and then
-link you program against :literal:`libyasl`.
+To link to libyasl as a shared library just include the :literal:`yasl.h`
+header in the files in which you want to use yasl, and then either use
+`pkg-config` like::
+
+    pkg-config --cflags --libs libyasl
+
+or link your program directly against :literal:`libyasl`.
 
 Building
 ========
