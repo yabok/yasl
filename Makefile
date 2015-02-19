@@ -1,3 +1,8 @@
+DESTDIR ?= /
+PREFIX ?= /usr/local
+LIBDIR ?= $(PREFIX)/lib
+INCLUDEDIR ?= $(PREFIX)/include
+
 CC = clang
 SOVER = 0.0
 SOMAJOR = 0
@@ -9,9 +14,6 @@ TESTCFLAGS += $(CFLAGS) -fPIE -pie -Wno-vla -Wno-cast-align
 TESTCFLAGS += -Wl,-rpath,$(CURDIR) -L. -lyasl
 
 MANPAGES = docs/yasl.3 docs/yaslnew.3 docs/yaslfree.3
-
-DESTDIR ?= /
-PREFIX ?= /usr/local
 
 all: yasl-test libyasl.so.$(SOVER) $(MANPAGES)
 
@@ -40,9 +42,9 @@ clean:
 
 install: libyasl.so.$(SOVER)
 	@echo "==> Installing libyasl to $(DESTDIR)$(PREFIX)"
-	install -Dm644 src/yasl.h "$(DESTDIR)$(PREFIX)/include/yasl.h"
-	install -Dm644 libyasl.so.$(SOVER) "$(DESTDIR)$(PREFIX)/lib/libyasl.so.$(SOVER)"
-	ln -s libyasl.so.$(SOVER) "$(DESTDIR)$(PREFIX)/lib/libyasl.so.$(SOMAJOR)"
-	ln -s libyasl.so.$(SOVER) "$(DESTDIR)$(PREFIX)/lib/libyasl.so"
+	install -Dm644 src/yasl.h "$(DESTDIR)$(INCLUDEDIR)/yasl.h"
+	install -Dm644 libyasl.so.$(SOVER) "$(DESTDIR)$(LIBDIR)/libyasl.so.$(SOVER)"
+	ln -s libyasl.so.$(SOVER) "$(DESTDIR)$(LIBDIR)/libyasl.so.$(SOMAJOR)"
+	ln -s libyasl.so.$(SOVER) "$(DESTDIR)$(LIBDIR)/libyasl.so"
 
 .PHONY: all test clean install
