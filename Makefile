@@ -6,6 +6,7 @@ CFLAGS += -Isrc -O2 -std=c99 -ggdb -fstack-protector-all -Wl,-z,relro -Wl,-z,now
 CFLAGS += -Werror -Weverything -Wno-disabled-macro-expansion
 SOCFLAGS += $(CFLAGS) -fPIC -shared -Wl,-soname,libyasl.so.$(SOMAJOR)
 TESTCFLAGS += $(CFLAGS) -fPIE -pie -Wno-vla -Wno-cast-align
+TESTCFLAGS += -Wl,-rpath,$(CURDIR) -L. -lyasl
 
 MANPAGES = docs/yasl.3 docs/yaslnew.3 docs/yaslfree.3
 
@@ -20,9 +21,9 @@ libyasl.so.$(SOVER): src/yasl.c src/yasl.h
 	ln -s libyasl.so.$(SOVER) libyasl.so
 	ln -s libyasl.so.$(SOVER) libyasl.so.$(SOMAJOR)
 
-yasl-test: src/yasl.c src/yasl.h test/twbctf.c test/twbctf.h test/tests.c
+yasl-test: libyasl.so.$(SOVER) test/twbctf.c test/twbctf.h test/tests.c
 	@echo "==> Building yasl-test"
-	$(CC) $(TESTCFLAGS) -o $@ test/twbctf.c src/yasl.c
+	$(CC) $(TESTCFLAGS) -o $@ test/twbctf.c
 
 docs/%.3: docs/%.rst
 	@echo "==> Building manpages"
