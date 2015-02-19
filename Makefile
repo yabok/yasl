@@ -2,6 +2,7 @@ DESTDIR ?= /
 PREFIX ?= /usr/local
 LIBDIR ?= $(PREFIX)/lib
 INCLUDEDIR ?= $(PREFIX)/include
+PKGCONFDIR ?= $(PREFIX)/share/pkgconfig
 
 CC = clang
 SOVER = 0.0
@@ -46,5 +47,6 @@ install: libyasl.so.$(SOVER)
 	install -Dm644 libyasl.so.$(SOVER) "$(DESTDIR)$(LIBDIR)/libyasl.so.$(SOVER)"
 	ln -s libyasl.so.$(SOVER) "$(DESTDIR)$(LIBDIR)/libyasl.so.$(SOMAJOR)"
 	ln -s libyasl.so.$(SOVER) "$(DESTDIR)$(LIBDIR)/libyasl.so"
+	install -Dm644 libyasl.pc "$(DESTDIR)$(PKGCONFDIR)/libyasl.pc"
 
 .PHONY: all test clean install
