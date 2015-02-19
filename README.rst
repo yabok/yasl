@@ -35,6 +35,16 @@ To use yasl as a shared library to link against just include the
 :literal:`yasl.h` header in the files in which you want to use yasl, and then
 link you program against :literal:`libyasl`.
 
+Building
+========
+
+To build libyasl.so, first either run :literal:`configure.bash` to set the
+appropriate paths in :literal:`Makefile` and :literal:`libyasl.pc`, or change
+them manually, then::
+
+    make libyasl.so
+    sudo make install
+
 Testing
 =======
 
