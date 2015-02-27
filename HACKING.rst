@@ -23,8 +23,16 @@ describing what was done in the commit. The summary is optionally followed by a
 longer description of the changes and reasons for them after a blank line, and
 wrapped at around 72 characters.
 
+All commits contributed should also contain a sign-off line to show that you
+accept the `Developer Certificate of Origin`_. Add a sign-off line by adding a
+line like the following to the end of each of your commit messages::
+
+    Signed-off-by: Random J Developer <random@developer.example.org>
+
+
 References: `A Note About Git Commit Messages`_
 
+.. _`Developer Certificate of Origin`: http://developercertificate.org/
 .. _`A Note About Git Commit Messages`:
     http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html
 
