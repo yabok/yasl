@@ -1,5 +1,4 @@
-#include <yasl.h>
-
+#include "../src/yasl.h"
 #include "twbctf.h"
 
 bool check_string_length             (void);

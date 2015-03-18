@@ -12,7 +12,7 @@ CFLAGS += -Isrc -O2 -std=c99 -ggdb -fstack-protector-all -Wl,-z,relro -Wl,-z,now
 CFLAGS += -Werror -Weverything -Wno-disabled-macro-expansion
 SOCFLAGS += $(CFLAGS) -fPIC -shared -Wl,-soname,libyasl.so.$(SOMAJOR)
 TESTCFLAGS += $(CFLAGS) -fPIE -pie -Wno-vla -Wno-cast-align
-TESTCFLAGS += -Wl,-rpath,$(CURDIR) -L. -lyasl
+TESTCFLAGS += -Wl,-rpath,$(CURDIR) -L.
 
 MANPAGES = docs/yasl.3 docs/yaslnew.3 docs/yaslfree.3
 
