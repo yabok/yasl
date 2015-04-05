@@ -63,16 +63,14 @@ if [[ -z "$pkgconfdir" ]]; then
 	pkgconfdir="$prefix"/share/pkgconfig
 fi
 
-sed -ri '/(DESTDIR|PREFIX|LIBDIR|INCLUDEDIR|PKGCONFDIR) \?= /d' Makefile
 makefile_vars="DESTDIR ?= $destdir
 PREFIX ?= $prefix
 LIBDIR ?= $libdir
 INCLUDEDIR ?= $includedir
 PKGCONFDIR ?= $pkgconfdir"
-cat - Makefile > Makefile.new <<<"$makefile_vars" && mv Makefile.new Makefile
+cat - Makefile.in > Makefile <<<"$makefile_vars"
 
-sed -ri '/(prefix|libdir|includedir)=/d' libyasl.pc
 pkgconfig_vars="prefix=$prefix
 libdir=$libdir
 includedir=$includedir"
-cat - libyasl.pc > pc.new <<<"$pkgconfig_vars" && mv pc.new libyasl.pc
+cat - libyasl.pc.in > libyasl.pc <<<"$pkgconfig_vars"
