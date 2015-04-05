@@ -69,7 +69,7 @@ if [[ -z "$includedir" ]]; then
 fi
 
 if [[ -z "$pkgconfdir" ]]; then
-	pkgconfdir="$prefix"/share/pkgconfig
+	pkgconfdir="$libdir"/pkgconfig
 fi
 
 makefile_vars="DESTDIR ?= $destdir
