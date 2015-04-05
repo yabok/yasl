@@ -1,2 +1,4 @@
+Makefile
+libyasl.pc
 libyasl.so*
 yasl-test

@@ -1,6 +1,3 @@
-prefix=/usr/local
-libdir=${prefix}/lib
-includedir=${prefix}/include
 
 Name: yasl
 Description: Yet Another String Library for C
