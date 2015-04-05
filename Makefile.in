@@ -21,8 +21,8 @@ all: yasl-test libyasl.so.$(SOVER) $(MANPAGES)
 libyasl.so.$(SOVER): src/yasl.c src/yasl.h
 	@echo "==> Building libyasl.so.$(SOVER)"
 	$(CC) $(SOCFLAGS) -o $@ src/yasl.c
-	ln -s libyasl.so.$(SOVER) libyasl.so
-	ln -s libyasl.so.$(SOVER) libyasl.so.$(SOMAJOR)
+	ln -sf libyasl.so.$(SOVER) libyasl.so
+	ln -sf libyasl.so.$(SOVER) libyasl.so.$(SOMAJOR)
 
 yasl-test: libyasl.so.$(SOVER) test/twbctf.c test/twbctf.h test/tests.c
 	@echo "==> Building yasl-test"
