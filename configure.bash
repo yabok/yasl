@@ -4,6 +4,7 @@ print_help() {
 	printf "%s\n" "Usage: $BASH_SOURCE [OPTION]...
 Configure Makefile and pkg-config file appropriately
 
+  --cc=COMMAND          C compiler [clang]
   --destdir=DIR         Root directory to install into [/]
   --prefix=DIR          Set the prefix for the other two variables [/usr/local]
   --libdir=DIR          Library code path [PREFIX/lib]
@@ -16,6 +17,10 @@ Report bugs to <yasl@lists.kyriasis.com>."
 
 for i in "$@"; do
 	case "$1" in
+		--cc=*)
+			cc="${i#*=}"
+			shift
+			;;
 		--destdir=*)
 			destdir="${i#*=}"
 			shift
@@ -43,6 +48,10 @@ for i in "$@"; do
 	esac
 done
 
+if [[ -z "$cc" ]]; then
+	cc=clang
+fi
+
 if [[ -z "$destdir" ]]; then
 	destdir=/
 fi
@@ -67,7 +76,10 @@ makefile_vars="DESTDIR ?= $destdir
 PREFIX ?= $prefix
 LIBDIR ?= $libdir
 INCLUDEDIR ?= $includedir
-PKGCONFDIR ?= $pkgconfdir"
+PKGCONFDIR ?= $pkgconfdir
+
+CC = $cc
+"
 cat - Makefile.in > Makefile <<<"$makefile_vars"
 
 pkgconfig_vars="prefix=$prefix
