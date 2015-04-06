@@ -15,9 +15,12 @@ addons:
       name: "yabok/yasl"
       description: "Build submitted via Travis CI"
     notification_email: yasl@kyriasis.com
-    build_command_prepend: cov-configure --template --comptype clangcc --compiler clang
+    build_command_prepend: cov-configure --template --comptype clangcc --compiler clang && ./configure.bash
     build_command: make
     branch_pattern: coverity_scan
+
+before_script:
+  - ./configure.bash
 
 script:
   - make test
