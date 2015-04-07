@@ -59,3 +59,9 @@ Indentation
 
 All source code is indented using tabs and aligned with spaces. A tab is
 counted as 4 characters when determining the length of a line.
+
+Contributing
+============
+
+By sending in a contribution through opening a GitHub pull request you agree to
+license your contribution under the 2-clause BSD license.
