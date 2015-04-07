@@ -23,6 +23,11 @@ describing what was done in the commit. The summary is optionally followed by a
 longer description of the changes and reasons for them after a blank line, and
 wrapped at around 72 characters.
 
+If the commit fixes a bug that has been previously reported, include a line
+like ``Fixes #123`` in the commit message. When the commit is merged it will
+cause the issue to automatically be closed. See the GitHub help page on
+`Closing issues via commit messages`_ for a list of all keywords.
+
 All commits contributed should also contain a sign-off line to show that you
 accept the `Developer Certificate of Origin`_. Add a sign-off line by adding a
 line like the following to the end of each of your commit messages::
@@ -32,6 +37,8 @@ line like the following to the end of each of your commit messages::
 
 References: `A Note About Git Commit Messages`_
 
+.. _`Closing issues via commit messages`:
+    https://help.github.com/articles/closing-issues-via-commit-messages/
 .. _`Developer Certificate of Origin`: http://developercertificate.org/
 .. _`A Note About Git Commit Messages`:
     http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html
