@@ -2,15 +2,15 @@
  yasl |travis| |RDT| |cov|
 ===========================
 
-.. |travis| image:: https://travis-ci.org/yabok/yasl.svg
+.. |travis| image:: https://img.shields.io/travis/yabok/yasl.svg?style=flat-square
    :alt: Travis Build Status
    :target: https://travis-ci.org/yabok/yasl
 
-.. |RDT| image:: https://readthedocs.org/projects/yasl/badge/?version=latest
+.. |RDT| image:: https://readthedocs.org/projects/yasl/badge/?version=latest&style=flat-square
    :alt: Read-The-Docs Status
    :target: https://readthedocs.org/projects/yasl/?badge=latest
 
-.. |cov| image:: https://scan.coverity.com/projects/3997/badge.svg
+.. |cov| image:: https://img.shields.io/coverity/scan/3997.svg?style=flat-square
    :alt: Coverity Scan Status
    :target: https://scan.coverity.com/projects/3997
 
