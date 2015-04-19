@@ -688,14 +688,16 @@ yaslRemoveFreeSpace(yastr str) {
 
 /* Helper function for yaslsplitargs() that returns non zero if 'c'
  * is a valid hex digit. */
-int is_hex_digit(char c) {
+int
+is_hex_digit(char c) {
 	return (c >= '0' && c <= '9') || (c >= 'a' && c <= 'f') ||
 	       (c >= 'A' && c <= 'F');
 }
 
 /* Helper function for yaslsplitargs() that converts a hex digit into an
  * integer from 0 to 15 */
-int hex_digit_to_int(char c) {
+int
+hex_digit_to_int(char c) {
 	switch(c) {
 	case '0': return 0;
 	case '1': return 1;
