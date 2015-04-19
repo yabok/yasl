@@ -317,8 +317,8 @@ yaslsplitargs(const char * line, int * argc) {
 			while(!done) {
 				if (inq) {
 					if (*p == '\\' && *(p + 1) == 'x' &&
-					                         is_hex_digit(*(p + 2)) &&
-					                         is_hex_digit(*(p + 3)))
+					                         isxdigit(*(p + 2)) &&
+					                         isxdigit(*(p + 3)))
 					{
 						unsigned char byte;
 
@@ -685,14 +685,6 @@ yaslRemoveFreeSpace(yastr str) {
 
 
 // Low-level helper functions //
-
-/* Helper function for yaslsplitargs() that returns non zero if 'c'
- * is a valid hex digit. */
-int
-is_hex_digit(char c) {
-	return (c >= '0' && c <= '9') || (c >= 'a' && c <= 'f') ||
-	       (c >= 'A' && c <= 'F');
-}
 
 /* Helper function for yaslsplitargs() that converts a hex digit into an
  * integer from 0 to 15 */

@@ -157,9 +157,6 @@ yaslRemoveFreeSpace(yastr str)
 
 // Low-level helper functions //
 int
-is_hex_digit(char c);
-
-int
 hex_digit_to_int(char c);
 
 
