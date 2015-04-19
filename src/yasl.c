@@ -690,7 +690,7 @@ yaslRemoveFreeSpace(yastr str) {
  * integer from 0 to 15 */
 int
 hex_digit_to_int(char c) {
-	// Eg. 'B' - 'A' is 0, so we need to add 10 to get the correct value.
+	// Eg. 'B' - 'A' is 1, so we need to add 10 to get the correct value.
 	return c >= '0' && c <= '9' ? c - '0'      :
 	       c >= 'A' && c <= 'F' ? c - 'A' + 10 :
 	       c >= 'a' && c <= 'f' ? c - 'a' + 10 : 0 ;
