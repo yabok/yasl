@@ -8,7 +8,6 @@ License:        BSD
 Group:          System Environment/Libraries
 URL:            https://github.com/yabok/yasl
 Source0:        %{name}-%{version}.tar.gz
-BuildRequires:  clang
 BuildRequires:  setup
 
 %description
@@ -26,7 +25,7 @@ Development files for yasl
 %setup -q
 
 %build
-./configure.bash --prefix=/usr --libdir=%{_libdir}
+./configure.bash --prefix=/usr --libdir=%{_libdir} --cc=gcc
 
 make %{?_smp_mflags} DEVELBUILD=0
 
@@ -42,12 +41,17 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root,-)
-%{_libdir}/libyasl.so*
+%{_libdir}/libyasl.so.*
 
 %files devel
 %defattr(-,root,root,-)
+%{_libdir}/libyasl.so
 %{_libdir}/pkgconfig/libyasl.pc
 %{_includedir}/yasl.h
+
+%post -p /sbin/ldconfig
+
+%postun -p /sbin/ldconfig
 
 %changelog
 * %(date "+%a %b %d %Y") (Automated RPM build) - %{version}-%{release}
