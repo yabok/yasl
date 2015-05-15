@@ -9,6 +9,10 @@ source_suffix = '.rst'
 show_authors = False
 today_fmt = '%d %b %Y'
 
+extensions = ['releases']
+releases_github_path = 'yabok/yasl'
+releases_debug = True
+
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
 exclude_patterns = ['_build']

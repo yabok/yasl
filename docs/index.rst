@@ -7,7 +7,7 @@ Contents:
 .. toctree::
 
    API
-
+   changelog
 
 
 Indices and tables
