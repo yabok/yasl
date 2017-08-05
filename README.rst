@@ -1,5 +1,5 @@
 ===========================
- yasl |travis| |RDT| |cov|
+ yasl |RDT| |cov|
 ===========================
 
 .. |RDT| image:: https://readthedocs.org/projects/yasl/badge/?version=latest&style=flat-square
