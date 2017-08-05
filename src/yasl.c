@@ -238,6 +238,32 @@ yaslrange(yastr str, ptrdiff_t start, ptrdiff_t end) {
 	hdr->len = newlen;
 }
 
+/* Remove all matching characters from the string */
+void
+yaslstrip(yastr str, const char * cset) {
+	if (!str || !cset) { return; }
+
+	struct yastrhdr * hdr = yaslheader(str);
+	size_t i = 0, newlen = 0, len = yasllen(str);
+
+	if (len == 0) { return; }
+
+	while (i <= len) {
+		while (strchr(cset, str[i]) && i <= len) {
+			i++;
+		}
+		if (i <= len) {
+			str[newlen] = str[i];
+			i++;
+			newlen++;
+		}
+	}
+
+	hdr->buf[newlen] = '\0';
+	hdr->free = hdr->free + (hdr->len - newlen);
+	hdr->len = newlen;
+}
+
 /* Apply tolower() to every character of the yasl string 's'. */
 void
 yasltolower(yastr str) {
