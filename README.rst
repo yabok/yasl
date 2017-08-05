@@ -47,12 +47,19 @@ or link your program directly against :literal:`libyasl`.
 Building
 ========
 
-To build libyasl.so, first either run :literal:`configure.bash` to set the
-appropriate paths in :literal:`Makefile` and :literal:`libyasl.pc`, or change
-them manually, then::
+To build libyasl make sure the following dependencies are installed:
 
-    make libyasl.so
-    sudo make install
+  * meson
+  * ninja
+  * sphinx-build
+
+Following are an example build and installation using meson::
+
+    mkdir build
+    meson build --prefix=/usr
+    cd build
+    ninja
+    DESTDIR=/destination ninja install
 
 Testing
 =======
@@ -61,7 +68,10 @@ The yasl test suite is compiled with C99 and written using twbctf_.
 
 To compile and run the test suite, run the following command::
 
-    make test
+    mkdir build
+    meson build
+    cd build
+    ninja test
 
 .. _twbctf: https://github.com/HalosGhost/twbctf
 
