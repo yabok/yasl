@@ -2,10 +2,6 @@
  yasl |travis| |RDT| |cov|
 ===========================
 
-.. |travis| image:: https://img.shields.io/travis/yabok/yasl.svg?style=flat-square
-   :alt: Travis Build Status
-   :target: https://travis-ci.org/yabok/yasl
-
 .. |RDT| image:: https://readthedocs.org/projects/yasl/badge/?version=latest&style=flat-square
    :alt: Read-The-Docs Status
    :target: https://readthedocs.org/projects/yasl/?badge=latest
