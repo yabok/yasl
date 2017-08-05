@@ -1,6 +1,6 @@
 /*******************************************************************\
 * A small, C test framework                                         *
-* Copyright (C) 2013-2014, Sam Stuewe                               *
+* Copyright (C) 2013-2015, Sam Stuewe                               *
 *                                                                   *
 * This program is free software; you can redistribute it and/or     *
 * modify it under the terms of the GNU General Public License       *
@@ -19,44 +19,41 @@
 \*******************************************************************/
 
 // Libraries //
-#include <stdint.h>  // explicitly sized types
-#include <stdio.h>   // printf(), putchar()
-#include <string.h>  // strlen()
 #include "twbctf.h"  // testing forward declarations
 #include "tests.c"   // tests
 
 // Run Suite //
-int32_t
-main (int32_t argc, char * argv []) {
+signed
+main (void) {
 
     const size_t TC = (sizeof test_list)/(sizeof (struct test));
-    bool results [TC], ret = false;
-    int8_t maxl = 0;
+    signed results [TC], ret = 0;
+    uint16_t maxl = 0;
 
     for ( size_t i = 0; i < TC; i ++ ) {
-        int8_t cur = (int8_t )strlen(test_list[i].desc);
+        uint16_t cur = (uint16_t )strlen(test_list[i].desc);
         maxl = cur > maxl ? cur : maxl;
     }
 
-    bool shortened = (argc > 1 && *(int16_t * )argv[1] == *(int16_t * )"-s");
+    size_t p = 0, f = 0;
 
     for ( size_t i = 0; i < TC; i ++ ) {
-        if ( shortened ) {
-            results[i] = test_list[i].func();
-            putchar(results[i] ? '.' : '!');
-            ret = ret || !results[i];
-        } else {
-            printf("Testing %-*s\t[ PEND ]\r", maxl, test_list[i].desc);
-            bool result = test_list[i].func();
-            const char * r = result ? "\x1b[32mPASS" : "\x1b[31mFAIL";
-            printf("Testing %-*s\t[ %s \x1b[0m]\n", maxl, test_list[i].desc, r);
-            ret = ret || !result;
-        }
-    } if ( shortened ) {
-        printf("\x1b[0m\n\nFailed Tests:\n");
+        results[i] = test_list[i].func();
+        results[i] ? ++f : ++p;
+        putchar(!results[i] ? '.' : '!');
+        ret = ret || results[i];
+        fflush(stdout);
+    } printf("\n\n%zu Passed, %zu Failed", p, f);
+
+    if ( ret ) {
+        printf(":\n");
         for ( size_t i = 0; i < TC; i ++ ) {
-            !results[i] ? printf(" %s\n", test_list[i].desc) : printf("");
+            if ( results[i] ) {
+                printf(" %s returned %d\n", test_list[i].desc, results[i]);
+            }
         }
+    } else {
+        putchar('\n');
     } return ret;
 }
 

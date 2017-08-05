@@ -2,12 +2,17 @@
 #define TWBCTF_H
 
 // Libraries //
-#include <stdbool.h> // bool keyword
+#include <stdint.h>
+#include <stdio.h>   // printf(), putchar()
+#include <string.h>  // strlen()
 
-typedef bool (* test_p) (void);
+typedef signed (* test_p) (void);
+
+#define declare_test(x) signed x (void);\
+                        signed x (void)
 
 struct test {
-    const char * desc;
+    char * desc;
     test_p func;
 };
 
