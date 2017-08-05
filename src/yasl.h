@@ -89,6 +89,9 @@ void
 yaslrange(yastr str, ptrdiff_t start, ptrdiff_t end);
 
 void
+yaslstrip(yastr str, const char * cset);
+
+void
 yasltolower(yastr str);
 
 void

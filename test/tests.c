@@ -8,6 +8,10 @@ bool yaslcpy_against_longer_str      (void);
 bool yaslcpy_against_shorter_str     (void);
 bool yaslcatprintf_base_case         (void);
 bool yasltrim_trims_correctly        (void);
+bool yaslstrip_single                (void);
+bool yaslstrip_multiple              (void);
+bool yaslstrip_all                   (void);
+bool yaslstrip_nothing               (void);
 bool yaslrange_one_one               (void);
 bool yaslrange_one_none              (void);
 bool yaslrange_ntwo_none             (void);
@@ -36,6 +40,10 @@ const struct test test_list [] = {
 	{ "yaslcpy() against a shorter string",         yaslcpy_against_shorter_str     },
 	{ "basic yaslcatprintf() usecase",              yaslcatprintf_base_case         },
 	{ "yasltrim() trims correctly",                 yasltrim_trims_correctly        },
+	{ "yaslstrip() strips correctly",               yaslstrip_single                },
+	{ "yaslstrip() strips multiple chars",          yaslstrip_multiple              },
+	{ "yaslstrip() with everything to strip",       yaslstrip_all                   },
+	{ "yaslstrip() with nothing to strip",          yaslstrip_nothing               },
 	{ "yaslrange(..., 1, 1)",                       yaslrange_one_one               },
 	{ "yaslrange(..., 1, -1)",                      yaslrange_one_none              },
 	{ "yaslrange(..., -2, -1)",                     yaslrange_ntwo_none             },
@@ -104,6 +112,34 @@ yasltrim_trims_correctly(void) {
 	_yastr_cleanup_ yastr x = yaslauto("xxciaoyy");
 	yasltrim(x, "xy");
 	return (yasllen(x) == 4 && memcmp(x, "ciao\0", 5) == 0);
+}
+
+bool
+yaslstrip_single(void) {
+	_yastr_cleanup_ yastr x = yaslauto("xxyyxx");
+	yaslstrip(x, "x");
+	return (yasllen(x) == 2 && memcmp(x, "yy\0", 3) == 0);
+}
+
+bool
+yaslstrip_multiple(void) {
+	_yastr_cleanup_ yastr x = yaslauto("xxyyz");
+	yaslstrip(x, "xy");
+	return (yasllen(x) == 1 && memcmp(x, "z\0", 2) == 0);
+}
+
+bool
+yaslstrip_all(void) {
+	_yastr_cleanup_ yastr x = yaslauto("xxxxxxxx");
+	yaslstrip(x, "x");
+	return (yasllen(x) == 0 && memcmp(x, "\0", 1) == 0);
+}
+
+bool
+yaslstrip_nothing(void) {
+	_yastr_cleanup_ yastr x = yaslauto("foo");
+	yaslstrip(x, "x");
+	return (yasllen(x) == 3 && memcmp(x, "foo\0", 4) == 0);
 }
 
 bool
