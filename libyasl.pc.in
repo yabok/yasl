@@ -1,7 +1,0 @@
-
-Name: yasl
-Description: Yet Another String Library for C
-URL: https://github.com/yabok/yasl
-Version: 0.0
-Cflags: -I${includedir}
-Libs: -L${libdir} -lyasl
